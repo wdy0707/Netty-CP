@@ -1,0 +1,11 @@
+
+dependencies {
+    compile project(":msgmodel")
+
+    // https://mvnrepository.com/artifact/com.esotericsoftware/kryo
+    compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.0'
+
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.42.Final'
+
+}

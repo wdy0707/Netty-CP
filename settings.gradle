@@ -1,0 +1,6 @@
+rootProject.name = 'netty-cus_protocal'
+include 'serializeframe'
+include 'msgmodel'
+include 'cpserver'
+include 'cpclient'
+
