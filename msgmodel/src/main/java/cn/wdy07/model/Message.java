@@ -8,11 +8,11 @@ public final class Message {
 
     private MsgHeader header;
 
-    private Object body;
+    private MessageContent content;
 
-    public Message(MsgHeader header, Object body) {
+    public Message(MsgHeader header, MessageContent content) {
         this.header = header;
-        this.body = body;
+        this.content = content;
     }
 
     public Message() {
@@ -26,19 +26,16 @@ public final class Message {
         this.header = header;
     }
 
-    public Object getBody() {
-        return body;
+    public Object getContent() {
+        return content;
     }
 
-    public void setBody(Object body) {
-        this.body = body;
+    public void setContent(MessageContent body) {
+        this.content = body;
     }
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "header=" + header +
-                ", body=" + body +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Message [header=" + header + ", content=" + content + "]";
+	}
 }

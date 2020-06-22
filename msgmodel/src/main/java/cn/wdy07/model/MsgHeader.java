@@ -8,76 +8,78 @@ import java.util.Map;
  * @create 2020-06-20 23:52
  */
 public final class MsgHeader {
-
-    private int crcCode = 0xabef0101;
-
-    private int length;// 消息长度
-
-    private long sessionID;// 会话ID
-
-    private byte type;// 消息类型
-
-    private byte priority;// 消息优先级
+	
+	// 会话类型
+	private byte conversationType;
+	
+	// 消息大类
+	private byte messageType1;
+	
+	// 消息细分类别
+	private byte messageType2;
+	
+	// 通信对象ID
+	private String targetId;
+	
+	// 自身ID
+	private String userId;
 
     private Map<String, Object> attachment = new HashMap<>(); // 附件
 
-    public int getCrcCode() {
-        return crcCode;
-    }
+	public short getConversationType() {
+		return conversationType;
+	}
 
-    public void setCrcCode(int crcCode) {
-        this.crcCode = crcCode;
-    }
+	public void setConversationType(int conversationType) {
+		this.conversationType = (byte) conversationType;
+	}
 
-    public int getLength() {
-        return length;
-    }
+	public byte getMessageType1() {
+		return messageType1;
+	}
 
-    public void setLength(int length) {
-        this.length = length;
-    }
+	public void setMessageType1(int messageType1) {
+		this.messageType1 = (byte) messageType1;
+	}
 
-    public long getSessionID() {
-        return sessionID;
-    }
+	public byte getMessageType2() {
+		return messageType2;
+	}
 
-    public void setSessionID(long sessionID) {
-        this.sessionID = sessionID;
-    }
+	public void setMessageType2(int messageType2) {
+		this.messageType2 = (byte) messageType2;
+	}
 
-    public byte getType() {
-        return type;
-    }
+	public String getTargetId() {
+		return targetId;
+	}
 
-    public void setType(byte type) {
-        this.type = type;
-    }
+	public void setTargetId(String targetId) {
+		this.targetId = targetId;
+	}
 
-    public byte getPriority() {
-        return priority;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public void setPriority(byte priority) {
-        this.priority = priority;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public Map<String, Object> getAttachment() {
-        return attachment;
-    }
+	public Map<String, Object> getAttachment() {
+		return attachment;
+	}
 
-    public void setAttachment(Map<String, Object> attachment) {
-        this.attachment = attachment;
-    }
+	public void setAttachment(Map<String, Object> attachment) {
+		this.attachment = attachment;
+	}
 
-    @Override
-    public String toString() {
-        return "MsgHeader{" +
-                "crcCode=" + crcCode +
-                ", length=" + length +
-                ", sessionID=" + sessionID +
-                ", type=" + type +
-                ", priority=" + priority +
-                ", attachment=" + attachment +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "MsgHeader [conversationType=" + conversationType + ", messageType1=" + messageType1 + ", messageType2="
+				+ messageType2 + ", targetId=" + targetId + ", userId=" + userId + ", attachment=" + attachment + "]";
+	}
+    
+    
+
 }
