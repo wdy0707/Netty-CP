@@ -1,6 +1,5 @@
 package cn.wdy07.server.handler.business;
 
-import cn.wdy07.model.Message;
 import cn.wdy07.server.handler.function.CPSHeartBeatResHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

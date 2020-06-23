@@ -1,0 +1,10 @@
+package cn.wdy07.msgmodel;
+
+/**
+ * 消息体基类
+ * @author taylor
+ *
+ */
+public class MessageContent {
+
+}

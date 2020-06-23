@@ -1,6 +1,6 @@
 package cn.wdy07.serializeframe.encoder;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.msgmodel.Message;
 import cn.wdy07.serializeframe.factory.SerializerFactory;
 import cn.wdy07.serializeframe.intf.Serializer;
 import io.netty.buffer.ByteBuf;
