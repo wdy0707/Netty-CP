@@ -15,6 +15,12 @@ public class TextMessageContent extends MessageContent {
 		super();
 		this.text = text;
 	}
+
+	public TextMessageContent() {
+		super();
+	}
+	
+	
 	
 	
 }

@@ -4,42 +4,16 @@ package cn.wdy07.model;
  * @author wdy
  * @create 2020-06-20 23:48
  */
-public enum ConversationType {
+public final class ConversationType {
 	
-    ONE_WAY(1), /*无需应答的消息*/
-    
-    LOGIN(2), /*登录*/
-    
-    LOGOUT(3), 
-    
-    HEARTBEAT(4), /*心跳*/
-	
-    // 单聊
-	PRIVATE(5),
-	
-	// 群聊
-	GROUP(6),
-	
-	// 聊天室
-	CHATROOM(7),
-	
-	// 客服
-	CUSTOMER_SERVICE(8),
-	
-	// 系统消息
-	SYSTEM(9),
-	
-	// 公众服务
-	PUBLIC_SERVICE(10);
-	
-
-    private byte value;
-
-    ConversationType(int value) {
-        this.value = (byte) value;
-    }
-
-    public byte getValue() {
-        return value;
-    }
+	public static final int ALL = 0;
+	public static final int ONE_WAY = 1;
+	public static final int LOGIN = 2;
+	public static final int LOGOUT = 3;
+	public static final int PRIVATE = 4;
+	public static final int GROUP = 5;
+	public static final int CHATROOM = 6;
+	public static final int SYSTEM = 7;
+	public static final int PUBLIC_SERVICE = 8;
+	public static final int HEARTBEAT = 9;
 }

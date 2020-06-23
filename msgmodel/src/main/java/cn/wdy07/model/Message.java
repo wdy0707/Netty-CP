@@ -6,11 +6,11 @@ package cn.wdy07.model;
  */
 public final class Message {
 
-    private MsgHeader header;
+    private MessageHeader header;
 
     private MessageContent content;
 
-    public Message(MsgHeader header, MessageContent content) {
+    public Message(MessageHeader header, MessageContent content) {
         this.header = header;
         this.content = content;
     }
@@ -18,11 +18,11 @@ public final class Message {
     public Message() {
     }
 
-    public MsgHeader getHeader() {
+    public MessageHeader getHeader() {
         return header;
     }
 
-    public void setHeader(MsgHeader header) {
+    public void setHeader(MessageHeader header) {
         this.header = header;
     }
 
