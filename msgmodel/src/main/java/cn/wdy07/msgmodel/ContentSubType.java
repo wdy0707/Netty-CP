@@ -1,23 +1,13 @@
-package cn.wdy07.msgmodel;
+package cn.wdy07.model;
 
-public enum ContentSubType {
-	TEXT(0),
-	VOICE(1),
-	IMAGE(2),
-	GIF(3),
-	FILE(4),
-	LOCATION(5),
+public final class ContentSubType {
+	public static final int ALL = 0;
+	public static final int TEXT = 0;
+	public static final int VOICE = 0;
+	public static final int IMAGE = 0;
+	public static final int GIF = 0;
+	public static final int FILE = 0;
+	public static final int LOCATION = 0;
+	public static final int COMBINE = 0;
 	
-	// 合并转发消息
-	COMBINE(6);
-	
-	private byte type;
-	
-	private ContentSubType(int type) {
-		this.type = (byte) type;
-	}
-	
-	public byte getType() {
-		return type;
-	}
 }

@@ -1,5 +1,5 @@
-package cn.wdy07.msgmodel;
+package cn.wdy07.model;
 
-public enum SystemSubType {
+public final class SystemSubType {
 
 }

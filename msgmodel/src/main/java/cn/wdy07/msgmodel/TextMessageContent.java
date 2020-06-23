@@ -1,4 +1,4 @@
-package cn.wdy07.msgmodel;
+package cn.wdy07.model;
 
 public class TextMessageContent extends MessageContent {
 	private String text;
@@ -15,6 +15,12 @@ public class TextMessageContent extends MessageContent {
 		super();
 		this.text = text;
 	}
+
+	public TextMessageContent() {
+		super();
+	}
+	
+	
 	
 	
 }

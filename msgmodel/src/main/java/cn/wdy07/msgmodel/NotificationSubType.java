@@ -1,19 +1,10 @@
-package cn.wdy07.msgmodel;
+package cn.wdy07.model;
 
-public enum NotificationSubType {
-	CONTACT(1),
-	PROFILE(2),
-	COMMAND(3),
-	INFORMATION(4),
-	READ_RECEIPT(5);
-	
-	private byte type;
-	
-	private NotificationSubType(int type) {
-		this.type = (byte) type;
-	}
-	
-	public byte getType() {
-		return type;
-	}
+public final class NotificationSubType {
+	public static int ALL = 0;
+	public static int CONTACT = 1;
+	public static int PROFILE = 2;
+	public static int COMMAND = 3;
+	public static int INFORMATION = 4;
+	public static int READ_RECEIPT = 5;
 }
