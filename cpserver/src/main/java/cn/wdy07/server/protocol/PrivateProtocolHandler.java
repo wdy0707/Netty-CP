@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.msgmodel.Message;
 import cn.wdy07.serializeframe.factory.SerializerFactory;
 import cn.wdy07.serializeframe.intf.Serializer;
 import io.netty.buffer.ByteBuf;

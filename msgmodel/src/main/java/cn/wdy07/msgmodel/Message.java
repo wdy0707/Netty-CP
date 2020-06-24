@@ -1,4 +1,7 @@
-package cn.wdy07.model;
+package cn.wdy07.msgmodel;
+
+import cn.wdy07.model.MessageHeader;
+import cn.wdy07.msgmodel.MessageContent;
 
 /**
  * @author wdy

@@ -1,6 +1,6 @@
 package cn.wdy07.server.handler;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.msgmodel.Message;
 import io.netty.channel.ChannelHandlerContext;
 
 public interface MessageHandler {

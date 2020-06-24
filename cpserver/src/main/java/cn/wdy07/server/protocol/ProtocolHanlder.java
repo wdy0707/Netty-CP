@@ -2,7 +2,7 @@ package cn.wdy07.server.protocol;
 
 import java.util.List;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.msgmodel.Message;
 import io.netty.buffer.ByteBuf;
 
 public interface ProtocolHanlder {
