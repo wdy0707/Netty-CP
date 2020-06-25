@@ -1,7 +1,8 @@
 package cn.wdy07.server.handler.function;
 
-import cn.wdy07.model.Message;
-import cn.wdy07.model.MsgHeader;
+import cn.wdy07.msgmodel.Message;
+import cn.wdy07.msgmodel.MsgHeader;
+import cn.wdy07.msgmodel.MsgType;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;

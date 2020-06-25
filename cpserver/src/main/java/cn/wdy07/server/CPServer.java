@@ -1,9 +1,9 @@
 package cn.wdy07.server;
 
-import cn.wdy07.model.ConversationType;
-import cn.wdy07.model.Message;
-import cn.wdy07.model.MessageType;
-import cn.wdy07.model.SystemSubType;
+import cn.wdy07.msgmodel.ConversationType;
+import cn.wdy07.msgmodel.Message;
+import cn.wdy07.msgmodel.MessageType;
+import cn.wdy07.msgmodel.SystemSubType;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.business.MessageStoreHandler;
 import cn.wdy07.server.handler.function.HeartBeatHandler;

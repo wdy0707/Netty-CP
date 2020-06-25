@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import cn.wdy07.model.ContentSubType;
-import cn.wdy07.model.ConversationType;
-import cn.wdy07.msgmodel.Message;
+import cn.wdy07.msgmodel.*;
+import cn.wdy07.msgmodel.ContentSubType;
 import cn.wdy07.model.MessageHeader;
-import cn.wdy07.model.MessageType;
-import cn.wdy07.msgmodel.TextMessageContent;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageHandlerNode;
 import cn.wdy07.server.handler.MessageInboundHandler;

@@ -2,7 +2,7 @@ package cn.wdy07.server.handler;
 
 import java.util.List;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.msgmodel.Message;
 import cn.wdy07.server.client.Clients;
 import cn.wdy07.server.protocol.ProtocolHandlerNode;
 import io.netty.buffer.ByteBuf;
