@@ -1,4 +1,4 @@
-package cn.wdy07.model;
+package cn.wdy07.msgmodel;
 
 public final class MessageType {
 
