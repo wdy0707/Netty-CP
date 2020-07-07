@@ -2,9 +2,9 @@ package cn.wdy07.client;
 
 import cn.wdy07.client.init.CPClientInitHandler;
 import cn.wdy07.constmodle.NetConfig;
-import cn.wdy07.msgmodel.Message;
-import cn.wdy07.msgmodel.MsgHeader;
-import cn.wdy07.msgmodel.MsgType;
+import cn.wdy07.model.Message;
+import cn.wdy07.model.MsgHeader;
+import cn.wdy07.model.MsgType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

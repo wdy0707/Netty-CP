@@ -1,16 +1,15 @@
 package cn.wdy07.server.protocol;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.wdy07.msgmodel.Message;
+import cn.wdy07.model.Message;
 import cn.wdy07.serializeframe.factory.SerializerFactory;
 import cn.wdy07.serializeframe.intf.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-public class PrivateProtocolHandler implements ProtocolHanlder {
+public class PrivateProtocolHandler implements ProtocolCodec {
 	private static final int MAGIC_NUMBER = 0xabcdef;
 	private Serializer serializer = SerializerFactory.getSerizalizer(Message.class);
 	@Override

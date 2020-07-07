@@ -1,32 +1,21 @@
 package cn.wdy07.server.client;
 
-import java.util.concurrent.ConcurrentHashMap;
-
+import cn.wdy07.server.protocol.Protocol;
 import io.netty.channel.Channel;
 
-public class Clients {
-	private static ConcurrentHashMap<String, Channel> clients = new ConcurrentHashMap<String, Channel>();
-	private static ConcurrentHashMap<Channel, String> supportProtocol = new ConcurrentHashMap<Channel, String>();
+/**
+ * 提供客户端操作接口
+ * @author taylor
+ *
+ */
+public interface Clients {
 	
-	public static void put(String name, Channel channel, String supportProtocol) {
-		if (clients.contains(name)) {
-			Channel ch = clients.get(name);
-			try {
-				ch.close().sync();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		clients.put(name, channel);
-		Clients.supportProtocol.put(channel, supportProtocol);
-	}
+	/*
+	 * 客户端登陆时候，带着客户端类型和支持的协议
+	 */
+	void put(String userId, Channel channel, String clientProtocol, String clientType);
 	
-	public static Channel getChannel(String name) {
-		return clients.get(name);
-	}
+	User getUser(String userId);
 	
-	public static String getProtocol(Channel channel) {
-		return supportProtocol.get(channel);
-	}
+	Protocol getSupportProtocol(Channel channel);
 }

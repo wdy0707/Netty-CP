@@ -2,16 +2,17 @@ package cn.wdy07.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
-import ch.qos.logback.core.net.server.Client;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageHandlerNode;
+import cn.wdy07.server.handler.MessageHandlerQualifier;
 import cn.wdy07.server.handler.MessageInboundHandler;
-import cn.wdy07.server.handler.ProtocolDecoder;
-import cn.wdy07.server.handler.ProtocolEncoder;
-import cn.wdy07.server.protocol.ProtocolHandlerNode;
-import cn.wdy07.server.protocol.ProtocolHanlder;
+import cn.wdy07.server.handler.qualifier.HandlerAllQualifier;
+import cn.wdy07.server.protocol.Protocol;
+import cn.wdy07.server.protocol.ProtocolCodec;
+import cn.wdy07.server.protocol.ProtocolDecoder;
+import cn.wdy07.server.protocol.ProtocolEncoder;
+import cn.wdy07.server.protocol.SupportedProtocol;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -21,32 +22,21 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ServerInitializer {
-	private List<ProtocolHandlerNode> protocols = new ArrayList<ProtocolHandlerNode>();
-	private List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
+	List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
 	private int port;
 
-	public ServerInitializer protocol(String name, ProtocolHanlder handler) {
-		if (name == null || name.length() == 0 || handler == null)
-			throw new IllegalArgumentException("protocol name cant be empty or handler cant be null");
-
-		protocols.add(new ProtocolHandlerNode(name, handler));
+	public ServerInitializer protocol(Protocol protocol, ProtocolCodec codec) {
+		SupportedProtocol.getInstance().register(protocol, codec);
 		return this;
 	}
 
-	public ServerInitializer messageHandler(MessageHandler hanlder) {
-		handlers.add(new MessageHandlerNode(0, 0, 0, hanlder));
+	public ServerInitializer messageHandler(MessageHandlerQualifier qualifier, MessageHandler handler) {
+		handlers.add(new MessageHandlerNode(qualifier, handler));
 		return this;
 	}
-
-	public ServerInitializer messageHandler(int conversationType, int messageType1, int messageType2, MessageHandler hanlder) {
-		if (conversationType < 0 || conversationType > 0x7f)
-			throw new IllegalArgumentException("conversationType is byte length");
-		if (messageType1 < 0 || messageType1 > 0x7f)
-			throw new IllegalArgumentException("messageType1 is byte length");
-		if (messageType2 < 0 || messageType2 > 0x7f)
-			throw new IllegalArgumentException("messageType2 is byte length");
-
-		handlers.add(new MessageHandlerNode(conversationType, messageType1, messageType2, hanlder));
+	
+	public ServerInitializer messageHandler(MessageHandler handler) {
+		handlers.add(new MessageHandlerNode(HandlerAllQualifier.handlerAllQualifier, handler));
 		return this;
 	}
 
@@ -60,18 +50,16 @@ public class ServerInitializer {
 		NioEventLoopGroup subGroup = new NioEventLoopGroup();
 
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		bootstrap.channel(NioServerSocketChannel.class)
-				.group(mainGroup, subGroup)
-				.option(ChannelOption.SO_BACKLOG, 1024)
-				.childHandler(new ChannelInitializer<Channel>() {
+		bootstrap.channel(NioServerSocketChannel.class).group(mainGroup, subGroup)
+				.option(ChannelOption.SO_BACKLOG, 1024).childHandler(new ChannelInitializer<Channel>() {
 
 					@Override
 					protected void initChannel(Channel ch) throws Exception {
-						ch.pipeline().addLast(new ProtocolDecoder(protocols));
-						ch.pipeline().addLast(new ProtocolEncoder(protocols));
+						ch.pipeline().addLast(new ProtocolDecoder());
+						ch.pipeline().addLast(new ProtocolEncoder());
 						ch.pipeline().addLast(new MessageInboundHandler(handlers));
 					}
-					
+
 				});
 
 		try {
@@ -89,6 +77,5 @@ public class ServerInitializer {
 			}
 		}
 	}
-
 
 }

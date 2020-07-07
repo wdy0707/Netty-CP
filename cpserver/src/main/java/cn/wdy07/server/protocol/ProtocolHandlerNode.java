@@ -1,30 +1,28 @@
 package cn.wdy07.server.protocol;
 
 public class ProtocolHandlerNode {
-	private String protocolName;
-	private ProtocolHanlder handler;
+	private Protocol protocol;
+	private ProtocolCodec codec;
 
-	public ProtocolHandlerNode(String name, ProtocolHanlder handler) {
-		this.protocolName = name;
-		this.handler = handler;
+	public ProtocolHandlerNode(Protocol protocol, ProtocolCodec codec) {
+		this.protocol = protocol;
+		this.setCodec(codec);
 	}
 
-	public String getProtocolName() {
-		return protocolName;
+	public Protocol getProtocol() {
+		return protocol;
 	}
 
-	public void setProtocolName(String name) {
-		this.protocolName = name;
+	public void setProtocol(Protocol protocol) {
+		this.protocol = protocol;
 	}
 
-	public ProtocolHanlder getHandler() {
-		return handler;
+	public ProtocolCodec getCodec() {
+		return codec;
 	}
 
-	public void setHandler(ProtocolHanlder handler) {
-		this.handler = handler;
+	public void setCodec(ProtocolCodec codec) {
+		this.codec = codec;
 	}
-	
-	
 }
 	
