@@ -8,23 +8,24 @@ import java.util.Map;
  * @create 2020-06-20 23:52
  */
 public final class MessageHeader {
-	
+
 	// 会话类型
 	private byte conversationType;
-	
+
 	// 消息大类
 	private byte messageType1;
-	
+
 	// 消息细分类别
 	private byte messageType2;
-	
+
+	// 客户端类型
+	private byte clientType;
+
 	// 通信对象ID
 	private String targetId;
-	
+
 	// 自身ID
 	private String userId;
-
-    private Map<String, Object> attachment = new HashMap<>(); // 附件
 
 	public short getConversationType() {
 		return conversationType;
@@ -66,20 +67,19 @@ public final class MessageHeader {
 		this.userId = userId;
 	}
 
-	public Map<String, Object> getAttachment() {
-		return attachment;
+	public byte getClientType() {
+		return clientType;
 	}
 
-	public void setAttachment(Map<String, Object> attachment) {
-		this.attachment = attachment;
+	public void setClientType(byte clientType) {
+		this.clientType = clientType;
 	}
 
 	@Override
 	public String toString() {
-		return "MessageHeader [conversationType=" + conversationType + ", messageType1=" + messageType1 + ", messageType2="
-				+ messageType2 + ", targetId=" + targetId + ", userId=" + userId + ", attachment=" + attachment + "]";
+		return "MessageHeader [conversationType=" + conversationType + ", messageType1=" + messageType1
+				+ ", messageType2=" + messageType2 + ", clientType=" + clientType + ", targetId=" + targetId
+				+ ", userId=" + userId + "]";
 	}
-    
-    
 
 }

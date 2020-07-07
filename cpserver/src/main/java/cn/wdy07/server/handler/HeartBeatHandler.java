@@ -11,7 +11,7 @@ public class HeartBeatHandler implements MessageHandler {
 
 	@Override
 	public void handle(ChannelHandlerContext ctx, Message message) {
-		ctx.writeAndFlush(message);
+		message.getHeader();
 	}
 
 }

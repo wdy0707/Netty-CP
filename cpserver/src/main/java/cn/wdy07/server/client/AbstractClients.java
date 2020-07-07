@@ -1,5 +1,6 @@
 package cn.wdy07.server.client;
 
+import cn.wdy07.model.header.ClientType;
 import cn.wdy07.server.exception.UnsupportedProtocolException;
 import cn.wdy07.server.protocol.Protocol;
 import cn.wdy07.server.protocol.SupportedProtocol;

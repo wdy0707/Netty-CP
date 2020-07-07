@@ -1,5 +1,6 @@
 package cn.wdy07.server.client;
 
+import cn.wdy07.model.header.ClientType;
 import io.netty.channel.Channel;
 
 /**
@@ -10,7 +11,6 @@ import io.netty.channel.Channel;
  */
 
 public class Client {
-	private String supportProtocol;
 	private Channel channel;
 	private ClientType clientType;
 
@@ -20,20 +20,8 @@ public class Client {
 	 */
 	private int heartBeatCount;
 
-	public String getSupportProtocol() {
-		return supportProtocol;
-	}
-
-	public void setSupportProtocol(String supportProtocol) {
-		this.supportProtocol = supportProtocol;
-	}
 
 	public Client() {
-	}
-
-	public Client(String supportProtocol, Channel channel) {
-		this.supportProtocol = supportProtocol;
-		this.channel = channel;
 	}
 
 	public Channel getChannel() {

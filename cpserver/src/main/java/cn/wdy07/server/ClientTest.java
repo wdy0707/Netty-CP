@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 import cn.wdy07.model.Message;
 import cn.wdy07.model.MessageHeader;
-import cn.wdy07.model.content.ContentSubType;
 import cn.wdy07.model.content.TextMessageContent;
+import cn.wdy07.model.header.ContentSubType;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.model.header.MessageType;
 import cn.wdy07.server.handler.MessageHandler;
