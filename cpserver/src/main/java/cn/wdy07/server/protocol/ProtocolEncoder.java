@@ -1,21 +1,21 @@
 package cn.wdy07.server.protocol;
 
 import cn.wdy07.model.Message;
-import cn.wdy07.server.client.Clients;
-import cn.wdy07.server.client.ConcurrentHashMapClients;
+import cn.wdy07.server.client.ClientManager;
+import cn.wdy07.server.client.InMemeoryClientManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 public class ProtocolEncoder extends MessageToByteEncoder<Message> {
-	Clients clients = ConcurrentHashMapClients.getInstance();
+	ClientManager manager = InMemeoryClientManager.getInstance();
 
 	public ProtocolEncoder() {
 		super();
 	}
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-		Protocol protocol = clients.getSupportProtocol(ctx.channel());
+		Protocol protocol = manager.getSupportedProtocol(msg.getHeader().getUserId(), ctx.channel());
 		boolean encoded = false;
 		
 		for (ProtocolHandlerNode node : SupportedProtocol.getInstance().getAllCodec()) {

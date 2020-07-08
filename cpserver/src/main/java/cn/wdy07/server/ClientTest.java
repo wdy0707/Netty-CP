@@ -31,21 +31,17 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 public class ClientTest {
-	
-	
-	
+
 	public static void main(String[] args) {
 		new ServerInitializer().func();
 	}
-	
-	
-	
+
 	static class ServerInitializer implements Runnable {
 		private volatile ChannelFuture future;
 		private List<ProtocolHandlerNode> protocols = new ArrayList<ProtocolHandlerNode>();
 		private List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
 		private int port;
-		
+
 		public ChannelFuture getFuture() {
 			return future;
 		}
@@ -63,7 +59,6 @@ public class ClientTest {
 			return this;
 		}
 
-
 		public ServerInitializer bind(int port) {
 			this.port = port;
 			return this;
@@ -72,35 +67,35 @@ public class ClientTest {
 		public void start() {
 			NioEventLoopGroup mainGroup = new NioEventLoopGroup(1);
 
-            Bootstrap b = new Bootstrap();
-            b.group(mainGroup);
-            b.channel(NioSocketChannel.class);
-            b.option(ChannelOption.AUTO_READ, true);
-            b.handler(new ChannelInitializer<Channel>() {
+			Bootstrap b = new Bootstrap();
+			b.group(mainGroup);
+			b.channel(NioSocketChannel.class);
+			b.option(ChannelOption.AUTO_READ, true);
+			b.handler(new ChannelInitializer<Channel>() {
+
+				@Override
+				protected void initChannel(Channel ch) throws Exception {
+					ch.pipeline().addLast(new ByteToMessageDecoder() {
 
 						@Override
-						protected void initChannel(Channel ch) throws Exception {
-							ch.pipeline().addLast(new ByteToMessageDecoder() {
-								
-								@Override
-								protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-									out.add(new PrivateProtocolHandler().decode(in));
-									
-								}
-							});
-							ch.pipeline().addLast(new MessageToByteEncoder<Message>() {
+						protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
+								throws Exception {
+							out.add(new PrivateProtocolHandler().decode(in));
 
-								@Override
-								protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out)
-										throws Exception {
-									out.writeBytes(new PrivateProtocolHandler().encode(msg));
-								}
-								
-							});
-							ch.pipeline().addLast(new MessageInboundHandler(handlers));
 						}
-						
 					});
+					ch.pipeline().addLast(new MessageToByteEncoder<Message>() {
+
+						@Override
+						protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
+							out.writeBytes(new PrivateProtocolHandler().encode(msg));
+						}
+
+					});
+					ch.pipeline().addLast(new MessageInboundHandler(handlers));
+				}
+
+			});
 
 			try {
 				ChannelFuture future = b.connect("127.0.0.1", port).sync();
@@ -120,43 +115,38 @@ public class ClientTest {
 
 		@Override
 		public void run() {
-			this
-    		.protocol("private", new PrivateProtocolHandler())
-    		.messageHandler(new MessageHandler() {
-				
+			this.protocol("private", new PrivateProtocolHandler()).messageHandler(new MessageHandler() {
+
 				@Override
 				public void handle(ChannelHandlerContext ctx, Message message) {
 					System.out.println(message);
 				}
-			})
-    		.bind(8080)
-    		.start();
+			}).bind(8080).start();
 		}
-		
+
 		public void func() {
-	        ServerInitializer client = new ServerInitializer();
-	        new Thread(client).start();
-	        ChannelFuture future = null;
-	        Scanner in = new Scanner(System.in);
-	        while (true) {
-	            try {
-	                //获取future，线程有等待处理时间
-	                if (null == future) {
-	                    future = client.getFuture();
-	                    Thread.sleep(500);
-	                    continue;
-	                }
-	                
-	                sendMessage(future.channel(), in.nextLine());
-	                
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	                in.close();
-	            }
-	        }
+			ServerInitializer client = new ServerInitializer();
+			new Thread(client).start();
+			ChannelFuture future = null;
+			Scanner in = new Scanner(System.in);
+			while (true) {
+				try {
+					// 获取future，线程有等待处理时间
+					if (null == future) {
+						future = client.getFuture();
+						Thread.sleep(500);
+						continue;
+					}
+
+					sendMessage(future.channel(), in.nextLine());
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					in.close();
+				}
+			}
 		}
-		
-		
+
 		// heartbeat
 		// chat
 		public static void sendMessage(Channel ch, String line) {
@@ -173,11 +163,10 @@ public class ClientTest {
 				message.setHeader(header);
 				message.setContent(new TextMessageContent("1234"));
 			}
-			
+
 			ch.writeAndFlush(message);
 			System.out.println("message sent");
 		}
-
 
 	}
 }

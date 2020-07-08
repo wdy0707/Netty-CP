@@ -1,5 +1,6 @@
 package cn.wdy07.server.handler.qualifier;
 
+import cn.wdy07.model.BaseType;
 import cn.wdy07.model.Message;
 import cn.wdy07.server.handler.MessageHandlerQualifier;
 
@@ -9,24 +10,24 @@ import cn.wdy07.server.handler.MessageHandlerQualifier;
  * @author taylor
  */
 public abstract class SingleTypeQualifier implements MessageHandlerQualifier {
-	private int[] types = null;
-	private int type;
+	private BaseType[] types = null;
+	private BaseType type;
 
-	public SingleTypeQualifier(int qualifiedType) {
+	public SingleTypeQualifier(BaseType qualifiedType) {
 		this.type = qualifiedType;
 	}
 
-	public SingleTypeQualifier(int[] qualifiedType) {
+	public SingleTypeQualifier(BaseType[] qualifiedType) {
 		this.types = qualifiedType;
 	}
 
 	@Override
 	public boolean qualify(Message message) {
-		int type = getTypeInMessage(message);
+		BaseType type = getTypeInMessage(message);
 		if (types == null)
 			return type == this.type;
-
-		for (int t : types)
+		
+		for (BaseType t : types)
 			if (t == type)
 				return true;
 
@@ -39,5 +40,5 @@ public abstract class SingleTypeQualifier implements MessageHandlerQualifier {
 	 * @param message
 	 * @return
 	 */
-	protected abstract int getTypeInMessage(Message message);
+	protected abstract BaseType getTypeInMessage(Message message);
 }

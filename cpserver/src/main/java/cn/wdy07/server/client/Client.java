@@ -1,6 +1,9 @@
 package cn.wdy07.server.client;
 
+import java.util.List;
+
 import cn.wdy07.model.header.ClientType;
+import cn.wdy07.server.protocol.Protocol;
 import io.netty.channel.Channel;
 
 /**
@@ -13,12 +16,15 @@ import io.netty.channel.Channel;
 public class Client {
 	private Channel channel;
 	private ClientType clientType;
-
+	private List<Protocol> protocols;
+	
 	/**
 	 * 心跳计数，实现功能：连续多次未收到心跳则认为客户端已断线，服务端可以清理该客户端连接。实现上，服务端有一个线程定时对该数加1，
 	 * 收到心跳消息时置零该数，该数大于一定值则已断线
 	 */
 	private int heartBeatCount;
+	
+	public static int maxHeartBeatCount = 3;
 
 
 	public Client() {
@@ -47,5 +53,13 @@ public class Client {
 
 	public void setClientType(ClientType clientType) {
 		this.clientType = clientType;
+	}
+
+	public List<Protocol> getProtocols() {
+		return protocols;
+	}
+
+	public void setProtocols(List<Protocol> protocols) {
+		this.protocols = protocols;
 	}
 }

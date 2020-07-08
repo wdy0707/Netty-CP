@@ -1,7 +1,9 @@
 package cn.wdy07.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import cn.wdy07.model.header.ClientType;
+import cn.wdy07.model.header.ConversationType;
+import cn.wdy07.model.header.MessageSubType;
+import cn.wdy07.model.header.MessageType;
 
 /**
  * @author wdy
@@ -10,16 +12,16 @@ import java.util.Map;
 public final class MessageHeader {
 
 	// 会话类型
-	private byte conversationType;
+	private ConversationType conversationType;
 
 	// 消息大类
-	private byte messageType1;
+	private MessageType messageType;
 
 	// 消息细分类别
-	private byte messageType2;
+	private MessageSubType messageType2;
 
 	// 客户端类型
-	private byte clientType;
+	private ClientType clientType;
 
 	// 通信对象ID
 	private String targetId;
@@ -27,28 +29,36 @@ public final class MessageHeader {
 	// 自身ID
 	private String userId;
 
-	public short getConversationType() {
+	public ConversationType getConversationType() {
 		return conversationType;
 	}
 
-	public void setConversationType(int conversationType) {
-		this.conversationType = (byte) conversationType;
+	public void setConversationType(ConversationType conversationType) {
+		this.conversationType = conversationType;
 	}
 
-	public byte getMessageType1() {
-		return messageType1;
+	public MessageType getMessageType() {
+		return messageType;
 	}
 
-	public void setMessageType1(int messageType1) {
-		this.messageType1 = (byte) messageType1;
+	public void setMessageType(MessageType messageType) {
+		this.messageType = messageType;
 	}
 
-	public byte getMessageType2() {
+	public MessageSubType getMessageType2() {
 		return messageType2;
 	}
 
-	public void setMessageType2(int messageType2) {
-		this.messageType2 = (byte) messageType2;
+	public void setMessageType2(MessageSubType messageType2) {
+		this.messageType2 = messageType2;
+	}
+
+	public ClientType getClientType() {
+		return clientType;
+	}
+
+	public void setClientType(ClientType clientType) {
+		this.clientType = clientType;
 	}
 
 	public String getTargetId() {
@@ -67,19 +77,13 @@ public final class MessageHeader {
 		this.userId = userId;
 	}
 
-	public byte getClientType() {
-		return clientType;
-	}
-
-	public void setClientType(byte clientType) {
-		this.clientType = clientType;
-	}
-
 	@Override
 	public String toString() {
-		return "MessageHeader [conversationType=" + conversationType + ", messageType1=" + messageType1
+		return "MessageHeader [conversationType=" + conversationType + ", messageType=" + messageType
 				+ ", messageType2=" + messageType2 + ", clientType=" + clientType + ", targetId=" + targetId
 				+ ", userId=" + userId + "]";
 	}
+
+	
 
 }
