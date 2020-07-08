@@ -2,8 +2,8 @@ package cn.wdy07.server.client;
 
 import java.util.List;
 
+import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ClientType;
-import cn.wdy07.server.protocol.Protocol;
 import io.netty.channel.Channel;
 
 /**

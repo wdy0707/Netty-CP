@@ -28,7 +28,7 @@ public class ProtocolDecoder extends ByteToMessageDecoder {
 
 			for (ProtocolHandlerNode node : SupportedProtocol.getInstance().getAllCodec()) {
 				if (node.getCodec().containsAtLeastOnePacket(in)) {
-					out.addAll(node.getCodec().decode(in));
+					out.add(node.getCodec().decode(in));
 
 					// 考虑buf中包含两种协议以上的包的情况。当解析完一种包以后，对每种协议重新判断是否有该协议的包，都没有则跳出循环。
 					needDecode = false;

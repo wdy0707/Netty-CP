@@ -1,6 +1,7 @@
 package cn.wdy07.server.protocol;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.model.Protocol;
 import cn.wdy07.server.client.ClientManager;
 import cn.wdy07.server.client.InMemeoryClientManager;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +16,7 @@ public class ProtocolEncoder extends MessageToByteEncoder<Message> {
 	}
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-		Protocol protocol = manager.getSupportedProtocol(msg.getHeader().getUserId(), ctx.channel());
+		Protocol protocol = manager.getSupportedProtocol(msg.getHeader().getTargetId(), ctx.channel());
 		boolean encoded = false;
 		
 		for (ProtocolHandlerNode node : SupportedProtocol.getInstance().getAllCodec()) {

@@ -1,15 +1,18 @@
 package cn.wdy07.server;
 
 import cn.wdy07.model.BaseType;
+import cn.wdy07.model.Message;
+import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.server.handler.GroupMessageHandler;
 import cn.wdy07.server.handler.HeartBeatHandler;
 import cn.wdy07.server.handler.LoginLogoutHandler;
+import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageStoreHandler;
 import cn.wdy07.server.handler.PrivateMessageHandler;
 import cn.wdy07.server.handler.qualifier.ConversationTypeQualifier;
 import cn.wdy07.server.protocol.PrivateProtocolHandler;
-import cn.wdy07.server.protocol.Protocol;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  * @author wdy
@@ -20,6 +23,15 @@ public class CPServer {
 		new ServerInitializer()
 				// 支持的协议
 				.protocol(Protocol.privatee, new PrivateProtocolHandler())
+
+				// debug 使用，打印每一个收到的报文
+				.messageHandler(new MessageHandler() {
+
+					@Override
+					public void handle(ChannelHandlerContext ctx, Message message) {
+						System.out.println(message);
+					}
+				})
 
 				// 对Message的处理
 				// 心跳

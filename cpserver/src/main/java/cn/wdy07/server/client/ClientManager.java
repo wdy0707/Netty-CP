@@ -3,11 +3,11 @@ package cn.wdy07.server.client;
 import java.util.List;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.model.Protocol;
 import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
 import cn.wdy07.server.exception.UserUnLoggedInException;
-import cn.wdy07.server.protocol.Protocol;
 import io.netty.channel.Channel;
 
 /**

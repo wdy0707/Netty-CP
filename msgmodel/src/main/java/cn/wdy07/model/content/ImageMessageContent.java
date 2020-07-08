@@ -24,6 +24,10 @@ public class ImageMessageContent extends MessageContent {
 		this.isFull = isFull;
 	}
 
+	public ImageMessageContent() {
+		super();
+	}
+
 	public ImageMessageContent(String url, boolean isFull) {
 		super();
 		this.url = url;

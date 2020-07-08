@@ -1,8 +1,5 @@
 package cn.wdy07.server.protocol;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.wdy07.model.Message;
 import cn.wdy07.serializeframe.factory.SerializerFactory;
 import cn.wdy07.serializeframe.intf.Serializer;
@@ -35,16 +32,14 @@ public class PrivateProtocolHandler implements ProtocolCodec {
 	}
 
 	@Override
-	public List<Message> decode(ByteBuf buf) {
-		List<Message> out = new ArrayList<Message>();
+	public Message decode(ByteBuf buf) {
 		buf.readInt();
 		int packetLen = buf.readInt();
 		
         byte[] bytes = new byte[packetLen];
         buf.readBytes(bytes);
-        Message deObj = serializer.deserialize(bytes);
-        out.add(deObj);
-        return out;
+        return serializer.deserialize(bytes);
+
 	}
 
 	@Override

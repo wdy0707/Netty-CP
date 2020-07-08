@@ -1,5 +1,7 @@
 package cn.wdy07.server.protocol;
 
+import cn.wdy07.model.Protocol;
+
 public class ProtocolHandlerNode {
 	private Protocol protocol;
 	private ProtocolCodec codec;

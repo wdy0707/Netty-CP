@@ -14,6 +14,11 @@ public class VoiceMessageContent extends MessageContent {
 		this.url = url;
 	}
 
+	
+	public VoiceMessageContent() {
+		
+	}
+
 	public VoiceMessageContent(String url, int duration) {
 		super();
 		this.url = url;

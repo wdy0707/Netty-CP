@@ -3,12 +3,12 @@ package cn.wdy07.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.wdy07.model.Protocol;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageHandlerNode;
 import cn.wdy07.server.handler.MessageHandlerQualifier;
 import cn.wdy07.server.handler.MessageInboundHandler;
 import cn.wdy07.server.handler.qualifier.HandlerAllQualifier;
-import cn.wdy07.server.protocol.Protocol;
 import cn.wdy07.server.protocol.ProtocolCodec;
 import cn.wdy07.server.protocol.ProtocolDecoder;
 import cn.wdy07.server.protocol.ProtocolEncoder;

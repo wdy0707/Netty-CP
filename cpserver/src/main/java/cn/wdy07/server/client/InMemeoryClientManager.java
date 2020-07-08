@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.model.Protocol;
 import cn.wdy07.model.content.LoginMessageContent;
 import cn.wdy07.model.header.ClientType;
 import cn.wdy07.server.client.token.AllPassTokenChecker;
@@ -16,7 +17,6 @@ import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
 import cn.wdy07.server.exception.UserUnLoggedInException;
-import cn.wdy07.server.protocol.Protocol;
 import io.netty.channel.Channel;
 
 public class InMemeoryClientManager implements ClientManager {
@@ -123,19 +123,14 @@ public class InMemeoryClientManager implements ClientManager {
 			// OK
 			Client client = new Client();
 			client.setChannel(channel);
-			List<Integer> protocolIntegers = ((LoginMessageContent) message.getContent()).getSupportedProtocols();
-			if (protocolIntegers.size() <= 0)
+
+			List<Protocol> protocols = ((LoginMessageContent) message.getContent()).getSupportedProtocols();
+			if (protocols.size() <= 0)
 				throw new IllegalArgumentException("客户端未提供支持的协议，至少提供一个支持的协议");
-
-			ArrayList<Protocol> protocols = new ArrayList<Protocol>(protocolIntegers.size());
-			for (int i : protocolIntegers) {
-				if (i >= Protocol.values().length)
-					throw new IllegalArgumentException("错误的协议类型：" + i);
-				protocols.add(Protocol.values()[i]);
-			}
-
-			protocols.trimToSize();
-			client.setProtocols(protocols);
+			
+			ArrayList<Protocol> p = new ArrayList<Protocol>(protocols);
+			p.trimToSize();
+			client.setProtocols(p);
 			client.setClientType(type);
 			clients.add(client);
 			clients.trimToSize();
@@ -164,7 +159,7 @@ public class InMemeoryClientManager implements ClientManager {
 		clientsMap.forEach((k, v) -> {
 			synchronized (v) {
 				Iterator<Client> iter = v.iterator();
-				for (; iter.hasNext(); ) {
+				for (; iter.hasNext();) {
 					Client client = iter.next();
 					if (client.addHeartBeatCountAndGet() >= Client.maxHeartBeatCount) {
 						iter.remove();

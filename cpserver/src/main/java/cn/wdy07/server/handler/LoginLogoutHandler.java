@@ -3,6 +3,7 @@ package cn.wdy07.server.handler;
 import java.util.List;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.model.content.LoginMessageContent;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.server.client.ClientManager;
 import cn.wdy07.server.client.InMemeoryClientManager;
@@ -11,6 +12,7 @@ import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
 import cn.wdy07.server.handler.offline.InMemoryOfflineMessageManager;
 import cn.wdy07.server.handler.offline.OfflineMessageManager;
+import cn.wdy07.server.protocol.message.MessageBuilder;
 import io.netty.channel.ChannelHandlerContext;
 
 public class LoginLogoutHandler implements MessageHandler {
@@ -20,11 +22,20 @@ public class LoginLogoutHandler implements MessageHandler {
 	@Override
 	public void handle(ChannelHandlerContext ctx, Message message) {
 		if (message.getHeader().getConversationType() == ConversationType.LOGIN) {
-			Message retMessage = new Message();
+			Message retMessage;
 			try {
 				clientManager.login(message, ctx.channel());
 				
 				// TODO: 构建OK报文
+				LoginMessageContent content = new LoginMessageContent();
+				content.setCode(200);
+				content.setText("login success");
+				retMessage = MessageBuilder.create()
+						.convesationType(ConversationType.LOGIN)
+						.userId("system")
+						.targetId(message.getHeader().getUserId())
+						.content(content)
+						.build();
 				
 				ctx.channel().writeAndFlush(retMessage);
 				// TODO: 获取历史消息

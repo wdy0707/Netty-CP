@@ -19,7 +19,12 @@ public class TextMessageContent extends MessageContent {
 	}
 
 	public TextMessageContent() {
-		super();
+		
+	}
+
+	@Override
+	public String toString() {
+		return "TextMessageContent [text=" + text + "]";
 	}
 	
 	

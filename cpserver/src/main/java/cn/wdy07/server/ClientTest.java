@@ -1,12 +1,16 @@
 package cn.wdy07.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import cn.wdy07.model.Message;
 import cn.wdy07.model.MessageHeader;
+import cn.wdy07.model.Protocol;
+import cn.wdy07.model.content.LoginMessageContent;
 import cn.wdy07.model.content.TextMessageContent;
+import cn.wdy07.model.header.ClientType;
 import cn.wdy07.model.header.ContentSubType;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.model.header.MessageType;
@@ -15,14 +19,13 @@ import cn.wdy07.server.handler.MessageHandlerNode;
 import cn.wdy07.server.handler.MessageInboundHandler;
 import cn.wdy07.server.handler.qualifier.HandlerAllQualifier;
 import cn.wdy07.server.protocol.PrivateProtocolHandler;
-import cn.wdy07.server.protocol.ProtocolCodec;
-import cn.wdy07.server.protocol.ProtocolHandlerNode;
-import cn.wdy07.server.protocol.ProtocolHanlder;
+import cn.wdy07.server.protocol.message.MessageBuilder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -38,20 +41,11 @@ public class ClientTest {
 
 	static class ServerInitializer implements Runnable {
 		private volatile ChannelFuture future;
-		private List<ProtocolHandlerNode> protocols = new ArrayList<ProtocolHandlerNode>();
 		private List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
 		private int port;
 
 		public ChannelFuture getFuture() {
 			return future;
-		}
-
-		public ServerInitializer protocol(String name, ProtocolCodec handler) {
-			if (name == null || name.length() == 0 || handler == null)
-				throw new IllegalArgumentException("protocol name cant be empty or handler cant be null");
-
-			protocols.add(new ProtocolHandlerNode(name, handler));
-			return this;
 		}
 
 		public ServerInitializer messageHandler(MessageHandler hanlder) {
@@ -92,7 +86,14 @@ public class ClientTest {
 						}
 
 					});
-					ch.pipeline().addLast(new MessageInboundHandler(handlers));
+					ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
+
+						@Override
+						public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+							System.out.println(msg);
+						}
+						
+					});
 				}
 
 			});
@@ -115,13 +116,7 @@ public class ClientTest {
 
 		@Override
 		public void run() {
-			this.protocol("private", new PrivateProtocolHandler()).messageHandler(new MessageHandler() {
-
-				@Override
-				public void handle(ChannelHandlerContext ctx, Message message) {
-					System.out.println(message);
-				}
-			}).bind(8080).start();
+			this.bind(8080).start();
 		}
 
 		public void func() {
@@ -143,29 +138,77 @@ public class ClientTest {
 				} catch (Exception e) {
 					e.printStackTrace();
 					in.close();
+				} finally {
+					
 				}
 			}
 		}
-
+		
+		// group1: user1, user2, user3
+		// group2: user1, user2, user4
+		// group3: user1, user3, user5
+		// login
+		// logout
 		// heartbeat
-		// chat
+		// private
+		// group
 		public static void sendMessage(Channel ch, String line) {
-			Message message = new Message();
-			if (line.equals("heartbeat")) {
-				MessageHeader header = new MessageHeader();
-				header.setConversationType(ConversationType.HEARTBEAT);
-				message.setHeader(header);
-			} else {
-				MessageHeader header = new MessageHeader();
-				header.setConversationType(ConversationType.PRIVATE);
-				header.setMessageType1(MessageType.CONTENT);
-				header.setMessageType2(ContentSubType.TEXT);
-				message.setHeader(header);
-				message.setContent(new TextMessageContent("1234"));
+			Message message = constructMessage(line);
+			if (message != null) {
+				System.out.println(message);
+				ch.writeAndFlush(message);
 			}
-
-			ch.writeAndFlush(message);
-			System.out.println("message sent");
+		}
+		
+		private static Message constructMessage(String line) {
+			String[] split = line.split("\\|");
+			
+			if (line.startsWith("login")) {
+				LoginMessageContent loginMessageContent = new LoginMessageContent();
+				loginMessageContent.setSupportedProtocols(new ArrayList<Protocol>(Arrays.asList(Protocol.privatee)));
+				
+				// login|userId|clientType
+				return MessageBuilder.create()
+						.convesationType(ConversationType.LOGIN)
+						.userId(split[1])
+						.clientType(ClientType.values()[Integer.valueOf(split[2])])
+						.content(loginMessageContent)
+						.build();
+			} else if (line.startsWith("logout")) {
+				// logout|userId
+				return MessageBuilder.create()
+						.convesationType(ConversationType.LOGOUT)
+						.userId(split[1])
+						.build();
+			} else if (line.startsWith("heartbeat")) {
+				return MessageBuilder.create()
+						.convesationType(ConversationType.HEARTBEAT)
+						.build();
+			} else if (line.startsWith("private")) {
+				TextMessageContent content = new TextMessageContent();
+				content.setText(split[3]);
+				
+				// private|userId|targetId|content
+				return MessageBuilder.create()
+						.convesationType(ConversationType.PRIVATE)
+						.userId(split[1])
+						.targetId(split[2])
+						.content(content)
+						.build();
+			} else if (line.startsWith("group")) {
+				TextMessageContent content = new TextMessageContent();
+				content.setText(split[3]);
+				
+				// group|userId|targetId|content
+				return MessageBuilder.create()
+						.convesationType(ConversationType.GROUP)
+						.userId(split[1])
+						.targetId(split[2])
+						.content(content)
+						.build();
+			}
+			
+			return null;
 		}
 
 	}

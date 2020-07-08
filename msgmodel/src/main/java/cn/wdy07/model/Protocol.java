@@ -1,4 +1,4 @@
-package cn.wdy07.server.protocol;
+package cn.wdy07.model;
 
 /**
  * 已经开发了的协议，可以在CPServer启动时使用的协议。
