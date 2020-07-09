@@ -1,9 +1,11 @@
 package cn.wdy07.server.handler;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import cn.wdy07.server.CPServerContext;
 import cn.wdy07.server.client.Client;
 import cn.wdy07.server.client.ClientManager;
-import cn.wdy07.server.client.InMemeoryClientManager;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -13,6 +15,17 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class HeartBeatHandler implements MessageHandler {
 	ClientManager manager = CPServerContext.getContext().getConfigurator().getClientManager();
+	
+	
+	{
+		Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
+			
+			@Override
+			public void run() {
+				manager.heartBeat();
+			}
+		}, 2, 5, TimeUnit.MINUTES);
+	}
 	
 	@Override
 	public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {

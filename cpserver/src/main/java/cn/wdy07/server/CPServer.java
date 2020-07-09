@@ -22,6 +22,10 @@ import io.netty.channel.ChannelHandlerContext;
 public class CPServer {
 	public static void main(String[] args) {
 		new ServerInitializer()
+
+				// 配置，有默认配置可不配置
+				.config(new DefaultCPServerConfigurator())
+				
 				// 支持的协议
 				.protocol(Protocol.privatee, new PrivateProtocolHandler())
 
@@ -54,9 +58,6 @@ public class CPServer {
 				// 真正的消息转发处理：多客户端同时在线支持、屏蔽词、已读功能都在这里实现
 				.messageHandler(new ConversationTypeQualifier(ConversationType.PRIVATE), new PrivateMessageHandler())
 				.messageHandler(new ConversationTypeQualifier(ConversationType.GROUP), new GroupMessageHandler())
-				
-				// 配置，有默认配置可不配置
-				.config(new DefaultCPServerConfigurator())
 
 				.bind(8080).start();
 	}
