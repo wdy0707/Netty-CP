@@ -3,6 +3,7 @@ package cn.wdy07.server.handler.offline;
 import java.util.List;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 /**
  * 离线消息存取接口，该接口实现也必须是单例的
@@ -10,7 +11,7 @@ import cn.wdy07.model.Message;
  *
  */
 public interface OfflineMessageManager {
-	void putOfflineMessage(String userId, Message message);
+	void putOfflineMessage(String userId, MessageWrapper wrapper);
 	
-	List<Message> getOfflineMessage(String userId);
+	List<MessageWrapper> getOfflineMessage(String userId);
 }

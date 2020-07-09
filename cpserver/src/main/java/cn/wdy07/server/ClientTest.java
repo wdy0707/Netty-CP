@@ -8,7 +8,7 @@ import java.util.Scanner;
 import cn.wdy07.model.Message;
 import cn.wdy07.model.MessageHeader;
 import cn.wdy07.model.Protocol;
-import cn.wdy07.model.content.LoginMessageContent;
+import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.content.TextMessageContent;
 import cn.wdy07.model.header.ClientType;
 import cn.wdy07.model.header.ContentSubType;
@@ -164,16 +164,17 @@ public class ClientTest {
 			String[] split = line.split("\\|");
 			
 			if (line.startsWith("login")) {
-				LoginMessageContent loginMessageContent = new LoginMessageContent();
+				LoginRequestMessageContent loginMessageContent = new LoginRequestMessageContent();
 				loginMessageContent.setSupportedProtocols(new ArrayList<Protocol>(Arrays.asList(Protocol.privatee)));
-				
+				loginMessageContent.setClientType(ClientType.values()[Integer.valueOf(split[2])]);
 				// login|userId|clientType
-				return MessageBuilder.create()
+				Message message = MessageBuilder.create()
 						.convesationType(ConversationType.LOGIN)
 						.userId(split[1])
-						.clientType(ClientType.values()[Integer.valueOf(split[2])])
 						.content(loginMessageContent)
 						.build();
+				message.setContent(loginMessageContent);
+				return message;
 			} else if (line.startsWith("logout")) {
 				// logout|userId
 				return MessageBuilder.create()
@@ -181,8 +182,10 @@ public class ClientTest {
 						.userId(split[1])
 						.build();
 			} else if (line.startsWith("heartbeat")) {
+				// heartbeat|userId
 				return MessageBuilder.create()
 						.convesationType(ConversationType.HEARTBEAT)
+						.userId(split[1])
 						.build();
 			} else if (line.startsWith("private")) {
 				TextMessageContent content = new TextMessageContent();

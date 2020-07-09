@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ClientType;
+import cn.wdy07.server.protocol.SupportedProtocol;
 import io.netty.channel.Channel;
 
 /**
@@ -61,5 +62,9 @@ public class Client {
 
 	public void setProtocols(List<Protocol> protocols) {
 		this.protocols = protocols;
+	}
+	
+	public Protocol getOneSupportProtocol() {
+		return SupportedProtocol.getInstance().getOneSupportedProtocol(protocols);
 	}
 }

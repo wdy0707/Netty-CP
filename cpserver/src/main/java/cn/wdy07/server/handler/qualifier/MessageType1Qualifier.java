@@ -1,7 +1,7 @@
 package cn.wdy07.server.handler.qualifier;
 
 import cn.wdy07.model.BaseType;
-import cn.wdy07.model.Message;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public class MessageType1Qualifier extends SingleTypeQualifier {
 
@@ -14,7 +14,7 @@ public class MessageType1Qualifier extends SingleTypeQualifier {
 	}
 
 	@Override
-	protected BaseType getTypeInMessage(Message message) {
-		return message.getHeader().getMessageType();
+	protected BaseType getTypeInMessage(MessageWrapper wrapper) {
+		return wrapper.getMessage().getHeader().getMessageType();
 	}
 }

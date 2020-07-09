@@ -1,7 +1,6 @@
 package cn.wdy07.server;
 
 import cn.wdy07.model.BaseType;
-import cn.wdy07.model.Message;
 import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.server.handler.GroupMessageHandler;
@@ -12,6 +11,7 @@ import cn.wdy07.server.handler.MessageStoreHandler;
 import cn.wdy07.server.handler.PrivateMessageHandler;
 import cn.wdy07.server.handler.qualifier.ConversationTypeQualifier;
 import cn.wdy07.server.protocol.PrivateProtocolHandler;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -28,8 +28,8 @@ public class CPServer {
 				.messageHandler(new MessageHandler() {
 
 					@Override
-					public void handle(ChannelHandlerContext ctx, Message message) {
-						System.out.println(message);
+					public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {
+						System.out.println(wrapper.getMessage());
 					}
 				})
 

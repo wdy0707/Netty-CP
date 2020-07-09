@@ -54,6 +54,22 @@ public class SupportedProtocol {
 		
 	}
 	
+	public Protocol getOneSupportedProtocol(List<Protocol> protocols) {
+		Protocol protocol = null;
+		try {
+			lock.readLock().lock();
+			for (Protocol p : protocols) {
+				if (support(p)) {
+					if (protocol == null || protocol.ordinal() > p.ordinal())
+						protocol = p;
+				}
+			}
+		} finally {
+			lock.readLock().unlock();
+		}
+		return protocol;
+	}
+	
 	public void register(Protocol protocol, ProtocolCodec codec) {
 		try {
 			lock.writeLock().lock();

@@ -1,6 +1,5 @@
 package cn.wdy07.model;
 
-import cn.wdy07.model.header.ClientType;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.model.header.MessageSubType;
 import cn.wdy07.model.header.MessageType;
@@ -19,9 +18,6 @@ public final class MessageHeader {
 
 	// 消息细分类别
 	private MessageSubType messageType2;
-
-	// 客户端类型
-	private ClientType clientType;
 
 	// 通信对象ID
 	private String targetId;
@@ -53,14 +49,6 @@ public final class MessageHeader {
 		this.messageType2 = messageType2;
 	}
 
-	public ClientType getClientType() {
-		return clientType;
-	}
-
-	public void setClientType(ClientType clientType) {
-		this.clientType = clientType;
-	}
-
 	public String getTargetId() {
 		return targetId;
 	}
@@ -80,10 +68,7 @@ public final class MessageHeader {
 	@Override
 	public String toString() {
 		return "MessageHeader [conversationType=" + conversationType + ", messageType=" + messageType
-				+ ", messageType2=" + messageType2 + ", clientType=" + clientType + ", targetId=" + targetId
-				+ ", userId=" + userId + "]";
+				+ ", messageType2=" + messageType2 + ", targetId=" + targetId + ", userId=" + userId + "]";
 	}
-
-	
 
 }

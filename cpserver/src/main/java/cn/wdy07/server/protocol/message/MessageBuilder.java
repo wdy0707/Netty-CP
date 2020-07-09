@@ -35,11 +35,6 @@ public class MessageBuilder {
 		return this;
 	}
 	
-	public MessageBuilder clientType(ClientType clientType) {
-		message.getHeader().setClientType(clientType);
-		return this;
-	}
-	
 	public MessageBuilder userId(String userId) {
 		message.getHeader().setUserId(userId);
 		return this;

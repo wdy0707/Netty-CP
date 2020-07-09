@@ -1,34 +1,41 @@
 package cn.wdy07.server.protocol;
 
-import cn.wdy07.model.Message;
 import cn.wdy07.model.Protocol;
 import cn.wdy07.server.client.ClientManager;
 import cn.wdy07.server.client.InMemeoryClientManager;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-public class ProtocolEncoder extends MessageToByteEncoder<Message> {
+public class ProtocolEncoder extends MessageToByteEncoder<MessageWrapper> {
+	Protocol defaultProtocol = Protocol.privatee;
 	ClientManager manager = InMemeoryClientManager.getInstance();
 
 	public ProtocolEncoder() {
 		super();
 	}
+	
+	/*	
+	 *  Message中的userId和targetId并不代表这条消息应该发送给谁
+	 * @see io.netty.handler.codec.MessageToByteEncoder#encode(io.netty.channel.ChannelHandlerContext, java.lang.Object, io.netty.buffer.ByteBuf)
+	 */
+	
 	@Override
-	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-		Protocol protocol = manager.getSupportedProtocol(msg.getHeader().getTargetId(), ctx.channel());
-		boolean encoded = false;
+	protected void encode(ChannelHandlerContext ctx, MessageWrapper wrapper, ByteBuf out) throws Exception {
+		Protocol protocol = null;
+		protocol = (Protocol) wrapper.getDescription(MessageWrapper.protocolKey);
 		
-		for (ProtocolHandlerNode node : SupportedProtocol.getInstance().getAllCodec()) {
-			if (node.getProtocol() == protocol) {
-				out.writeBytes(node.getCodec().encode(msg));
-				encoded = true;
-				break;
-			}
+		if (protocol == null) { // wrapper未指定协议
+			String receiverId = (String) wrapper.getDescription(MessageWrapper.receiverKey);
+			if (receiverId != null) 
+				protocol = manager.getSupportedProtocol(receiverId, ctx.channel());
 		}
 		
-		if (!encoded)
-			throw new IllegalStateException("no proper protocol encoder: " + protocol);
+		if (protocol == null) // 仍然没有查找到协议，使用默认的
+			protocol = defaultProtocol;
+		
+		out.writeBytes(SupportedProtocol.getInstance().getCodec(protocol).encode(wrapper.getMessage()));
 	}
 
 }

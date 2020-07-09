@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import cn.wdy07.model.Message;
 import cn.wdy07.model.Protocol;
-import cn.wdy07.model.content.LoginMessageContent;
+import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.header.ClientType;
 import cn.wdy07.server.client.token.AllPassTokenChecker;
 import cn.wdy07.server.client.token.SimpleToken;
@@ -17,6 +17,8 @@ import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
 import cn.wdy07.server.exception.UserUnLoggedInException;
+import cn.wdy07.server.protocol.SupportedProtocol;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.Channel;
 
 public class InMemeoryClientManager implements ClientManager {
@@ -47,22 +49,13 @@ public class InMemeoryClientManager implements ClientManager {
 			throw new UserUnLoggedInException("用户未登录");
 
 		synchronized (clients) {
-			Protocol protocol = null;
 			for (Client client : clients)
 				if (channel.equals(client.getChannel())) {
-					// 登陆时已经check过，至少包含一个
-					List<Protocol> protocols = client.getProtocols();
-
-					// 查找ordinal最小的
-					protocol = protocols.get(0);
-					for (int i = 1; i < protocols.size(); i++) {
-						Protocol p = protocols.get(i);
-						if (protocol.ordinal() > p.ordinal())
-							protocol = p;
-					}
+					// 登陆时已经check过，至少包含一个，client保存的协议并不都支持
+					return SupportedProtocol.getInstance().getOneSupportedProtocol(client.getProtocols());
 				}
 
-			return protocol;
+			return null;
 		}
 	}
 
@@ -93,8 +86,9 @@ public class InMemeoryClientManager implements ClientManager {
 	 * io.netty.channel.Channel)
 	 */
 	@Override
-	public void login(Message message, Channel channel)
+	public void login(MessageWrapper wrapper, Channel channel)
 			throws RepeatLoginException, ExceedMaxLoginClientException, UnAuthorizedTokenException {
+		Message message = wrapper.getMessage();
 		String userId = message.getHeader().getUserId();
 		ArrayList<Client> clients = clientsMap.putIfAbsent(userId, new ArrayList<Client>());
 		if (clients == null) // 原先没有任何客户端登陆
@@ -107,7 +101,7 @@ public class InMemeoryClientManager implements ClientManager {
 				throw new ExceedMaxLoginClientException("超过最大登陆客户端个数： " + maxLoginClientCount);
 
 			// check repeatLogin
-			ClientType type = message.getHeader().getClientType();
+			ClientType type = ((LoginRequestMessageContent) message.getContent()).getClientType();
 			for (Client loginedClient : clients) {
 				if (channel.equals(loginedClient.getChannel()))
 					throw new RepeatLoginException("该客户端已经登陆");
@@ -124,7 +118,7 @@ public class InMemeoryClientManager implements ClientManager {
 			Client client = new Client();
 			client.setChannel(channel);
 
-			List<Protocol> protocols = ((LoginMessageContent) message.getContent()).getSupportedProtocols();
+			List<Protocol> protocols = ((LoginRequestMessageContent) message.getContent()).getSupportedProtocols();
 			if (protocols.size() <= 0)
 				throw new IllegalArgumentException("客户端未提供支持的协议，至少提供一个支持的协议");
 			
@@ -138,7 +132,8 @@ public class InMemeoryClientManager implements ClientManager {
 	}
 
 	@Override
-	public void logout(Message message, Channel channel) {
+	public void logout(MessageWrapper wrapper, Channel channel) {
+		Message message = wrapper.getMessage();
 		ArrayList<Client> clients = clientsMap.get(message.getHeader().getUserId());
 		if (clients == null || clients.isEmpty()) // 没有登录
 			return;

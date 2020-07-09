@@ -1,7 +1,7 @@
 package cn.wdy07.server.handler.transfer;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public interface MessageTransferer {
-	void transfer(Message message);
+	void transfer(MessageWrapper wrapper);
 }

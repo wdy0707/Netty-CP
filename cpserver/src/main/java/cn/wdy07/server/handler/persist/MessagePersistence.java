@@ -1,8 +1,8 @@
 package cn.wdy07.server.handler.persist;
 
-import cn.wdy07.model.Message;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public interface MessagePersistence {
 	
-	void persist(Message message);
+	void persist(MessageWrapper wrapper);
 }

@@ -1,8 +1,8 @@
 package cn.wdy07.server.handler;
 
-import cn.wdy07.model.Message;
 import cn.wdy07.server.handler.persist.MessagePersistence;
 import cn.wdy07.server.handler.persist.PrintConsoleMessagePersistence;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 
 public class MessageStoreHandler implements MessageHandler {
@@ -11,8 +11,8 @@ public class MessageStoreHandler implements MessageHandler {
 	MessagePersistence persistence = new PrintConsoleMessagePersistence();
 	
 	@Override
-	public void handle(ChannelHandlerContext ctx, Message message) {
-		persistence.persist(message);
+	public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {
+		persistence.persist(wrapper);
 	}
 
 }

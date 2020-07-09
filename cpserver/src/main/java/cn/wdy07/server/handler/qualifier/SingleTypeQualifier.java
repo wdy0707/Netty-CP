@@ -1,8 +1,7 @@
 package cn.wdy07.server.handler.qualifier;
 
 import cn.wdy07.model.BaseType;
-import cn.wdy07.model.Message;
-import cn.wdy07.server.handler.MessageHandlerQualifier;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 /**
  * ConversationTypeQualifier、MessageType1Qualifier、MessageType2Qualifier的父类，使用模板模式
@@ -22,8 +21,8 @@ public abstract class SingleTypeQualifier implements MessageHandlerQualifier {
 	}
 
 	@Override
-	public boolean qualify(Message message) {
-		BaseType type = getTypeInMessage(message);
+	public boolean qualify(MessageWrapper wrapper) {
+		BaseType type = getTypeInMessage(wrapper);
 		if (types == null)
 			return type == this.type;
 		
@@ -40,5 +39,5 @@ public abstract class SingleTypeQualifier implements MessageHandlerQualifier {
 	 * @param message
 	 * @return
 	 */
-	protected abstract BaseType getTypeInMessage(Message message);
+	protected abstract BaseType getTypeInMessage(MessageWrapper wrapper);
 }

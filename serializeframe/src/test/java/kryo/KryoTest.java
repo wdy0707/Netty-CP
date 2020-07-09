@@ -50,7 +50,6 @@ public class KryoTest {
 	private static Message buildMessage() {
 		Message message = new Message();
 		MessageHeader header = new MessageHeader();
-		header.setClientType(ClientType.AndroidPad);
 		header.setConversationType(ConversationType.GROUP);
 		header.setMessageType(MessageType.CONTENT);
 //		header.setMessageType2(ContentSubType.FILE);

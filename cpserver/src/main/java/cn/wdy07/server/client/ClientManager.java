@@ -8,6 +8,7 @@ import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
 import cn.wdy07.server.exception.UserUnLoggedInException;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.Channel;
 
 /**
@@ -58,7 +59,7 @@ public interface ClientManager {
 	 * @throws RepeatLoginException
 	 * @throws ExceedMaxLoginClientException
 	 */
-	void login(Message message, Channel channel)
+	void login(MessageWrapper wrapper, Channel channel)
 			throws RepeatLoginException, ExceedMaxLoginClientException, UnAuthorizedTokenException;
 	
 	/**
@@ -67,7 +68,7 @@ public interface ClientManager {
 	 * @param message 登出报文
 	 * @param channel
 	 */
-	void logout(Message message, Channel channel);
+	void logout(MessageWrapper wrapper, Channel channel);
 	
 	/**
 	 * 在实现类中需要启动一个单线程池来处理，隔一定时间对每个Client的heartBeatCount加1，该数大于一定值则已断线

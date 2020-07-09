@@ -12,7 +12,7 @@ import cn.wdy07.server.handler.group.Member;
 import cn.wdy07.server.handler.group.SimpleLocalGroupManager;
 import cn.wdy07.server.handler.offline.InMemoryOfflineMessageManager;
 import cn.wdy07.server.handler.offline.OfflineMessageManager;
-import io.netty.channel.Channel;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public class SimpleGroupMessageTransferer implements MessageTransferer {
 	private OfflineMessageManager offlineMessageManager = InMemoryOfflineMessageManager.getInstance();
@@ -20,21 +20,24 @@ public class SimpleGroupMessageTransferer implements MessageTransferer {
 	private GroupManager groupManager = SimpleLocalGroupManager.getInstance();
 	
 	@Override
-	public void transfer(Message message) {
+	public void transfer(MessageWrapper wrapper) {
+		Message message = wrapper.getMessage();
 		String groupId = message.getHeader().getTargetId();
 		Set<Member> members = groupManager.getAllMember(groupId);
+		
+		// 将消息发送给每一个成员
 		for (Member member : members) {
 			String userId = member.getUserId();
+			wrapper.addDescription(MessageWrapper.receiverKey, userId);
 			List<Client> clients = clientManager.getUserClients(userId);
 			if (clients == null || clients.isEmpty()) {
-				offlineMessageManager.putOfflineMessage(userId, message);
+				offlineMessageManager.putOfflineMessage(userId, wrapper);
 			} else {
 				for (Client client : clients) {
-					client.getChannel().writeAndFlush(message);
+					wrapper.addDescription(MessageWrapper.protocolKey, client.getOneSupportProtocol());
+					client.getChannel().writeAndFlush(wrapper);
 				}
 			}
-			
-
 		}
 	}
 

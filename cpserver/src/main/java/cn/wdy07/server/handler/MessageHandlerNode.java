@@ -1,5 +1,7 @@
 package cn.wdy07.server.handler;
 
+import cn.wdy07.server.handler.qualifier.MessageHandlerQualifier;
+
 public class MessageHandlerNode {
 	private MessageHandlerQualifier qualifier;
 	private MessageHandler hanlder;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -13,7 +14,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @author taylor
  *
  */
-public class MessageInboundHandler extends SimpleChannelInboundHandler<Message> {
+public class MessageInboundHandler extends SimpleChannelInboundHandler<MessageWrapper> {
 
 	private List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
 	
@@ -23,7 +24,7 @@ public class MessageInboundHandler extends SimpleChannelInboundHandler<Message> 
 	}
 
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+	protected void channelRead0(ChannelHandlerContext ctx, MessageWrapper msg) throws Exception {
 		for (MessageHandlerNode node : handlers) {
 			if (node.getQualifier().qualify(msg))
 				node.getHanlder().handle(ctx, msg);

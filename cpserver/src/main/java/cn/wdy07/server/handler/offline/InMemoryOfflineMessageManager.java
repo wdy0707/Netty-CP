@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public class InMemoryOfflineMessageManager implements OfflineMessageManager {
-	private ConcurrentHashMap<String, List<Message>> offlineMessage = new ConcurrentHashMap<String, List<Message>>();
+	private ConcurrentHashMap<String, List<MessageWrapper>> offlineMessage = new ConcurrentHashMap<String, List<MessageWrapper>>();
 	
 	private static InMemoryOfflineMessageManager manager = new InMemoryOfflineMessageManager();
 	
-	private static final ArrayList<Message> EMPTY_LIST = new ArrayList<Message>();
+	private static final ArrayList<MessageWrapper> EMPTY_LIST = new ArrayList<MessageWrapper>();
 	private InMemoryOfflineMessageManager() {
 		
 	}
@@ -21,19 +22,19 @@ public class InMemoryOfflineMessageManager implements OfflineMessageManager {
 	}
 	
 	@Override
-	public void putOfflineMessage(String userId, Message message) {
-		List<Message> list = offlineMessage.putIfAbsent(userId, new ArrayList<Message>());
+	public void putOfflineMessage(String userId, MessageWrapper wrapper) {
+		List<MessageWrapper> list = offlineMessage.putIfAbsent(userId, new ArrayList<MessageWrapper>());
 		if (list == null)
 			list = offlineMessage.get(userId);
 		
 		synchronized (list) {
-			list.add(message);
+			list.add(wrapper);
 		}
 	}
 
 	@Override
-	public List<Message> getOfflineMessage(String userId) {
-		List<Message> list = offlineMessage.put(userId, new ArrayList<Message>());
+	public List<MessageWrapper> getOfflineMessage(String userId) {
+		List<MessageWrapper> list = offlineMessage.put(userId, new ArrayList<MessageWrapper>());
 		if (list == null || list.isEmpty())
 			return EMPTY_LIST;
 		return list;

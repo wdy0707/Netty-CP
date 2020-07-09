@@ -4,18 +4,17 @@ import java.util.List;
 
 import cn.wdy07.model.MessageContent;
 import cn.wdy07.model.Protocol;
+import cn.wdy07.model.header.ClientType;
 
-public class LoginMessageContent extends MessageContent {
+public class LoginRequestMessageContent extends MessageContent {
+
+	private ClientType clientType;
 	private List<Protocol> supportedProtocols;
-	
+
 	// 客户端向应用服务器登陆时，应用服务器发放的token
 	private String token;
-	
-	private int code;
-	
-	private String text;
 
-	public LoginMessageContent() {
+	public LoginRequestMessageContent() {
 		super();
 	}
 
@@ -35,27 +34,18 @@ public class LoginMessageContent extends MessageContent {
 		this.token = token;
 	}
 
-	public int getCode() {
-		return code;
+	public ClientType getClientType() {
+		return clientType;
 	}
 
-	public void setCode(int code) {
-		this.code = code;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+	public void setClientType(ClientType clientType) {
+		this.clientType = clientType;
 	}
 
 	@Override
 	public String toString() {
-		return "LoginMessageContent [supportedProtocols=" + supportedProtocols + ", token=" + token + ", code=" + code
-				+ ", text=" + text + "]";
+		return "LoginRequestMessageContent [clientType=" + clientType + ", supportedProtocols=" + supportedProtocols
+				+ ", token=" + token + "]";
 	}
-	
-	
+
 }

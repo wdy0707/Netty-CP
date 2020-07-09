@@ -1,7 +1,6 @@
 package cn.wdy07.server.handler.qualifier;
 
-import cn.wdy07.model.Message;
-import cn.wdy07.server.handler.MessageHandlerQualifier;
+import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public class HandlerAllQualifier implements MessageHandlerQualifier {
 	
@@ -10,7 +9,7 @@ public class HandlerAllQualifier implements MessageHandlerQualifier {
 	private HandlerAllQualifier() {
 	}
 	@Override
-	public boolean qualify(Message message) {
+	public boolean qualify(MessageWrapper wrapper) {
 		return true;
 	}
 }
