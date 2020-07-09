@@ -7,6 +7,7 @@ import cn.wdy07.model.Protocol;
 import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.content.LoginResponseMessageContent;
 import cn.wdy07.model.header.ConversationType;
+import cn.wdy07.server.CPServerContext;
 import cn.wdy07.server.client.ClientManager;
 import cn.wdy07.server.client.InMemeoryClientManager;
 import cn.wdy07.server.exception.ExceedMaxLoginClientException;
@@ -20,8 +21,8 @@ import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 
 public class LoginLogoutHandler implements MessageHandler {
-	ClientManager clientManager = InMemeoryClientManager.getInstance();
-	OfflineMessageManager offlineMessageManager = InMemoryOfflineMessageManager.getInstance();
+	ClientManager clientManager = CPServerContext.getContext().getConfigurator().getClientManager();
+	OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator().getOfflineMessageManager();
 
 	@Override
 	public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {

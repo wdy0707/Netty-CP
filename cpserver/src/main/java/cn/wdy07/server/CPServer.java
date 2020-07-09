@@ -3,6 +3,7 @@ package cn.wdy07.server;
 import cn.wdy07.model.BaseType;
 import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ConversationType;
+import cn.wdy07.server.config.DefaultCPServerConfigurator;
 import cn.wdy07.server.handler.GroupMessageHandler;
 import cn.wdy07.server.handler.HeartBeatHandler;
 import cn.wdy07.server.handler.LoginLogoutHandler;
@@ -53,6 +54,9 @@ public class CPServer {
 				// 真正的消息转发处理：多客户端同时在线支持、屏蔽词、已读功能都在这里实现
 				.messageHandler(new ConversationTypeQualifier(ConversationType.PRIVATE), new PrivateMessageHandler())
 				.messageHandler(new ConversationTypeQualifier(ConversationType.GROUP), new GroupMessageHandler())
+				
+				// 配置，有默认配置可不配置
+				.config(new DefaultCPServerConfigurator())
 
 				.bind(8080).start();
 	}

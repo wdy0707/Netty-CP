@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.wdy07.model.Protocol;
+import cn.wdy07.server.config.CPServerConfigurator;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageHandlerNode;
 import cn.wdy07.server.handler.MessageInboundHandler;
@@ -42,6 +43,11 @@ public class ServerInitializer {
 
 	public ServerInitializer bind(int port) {
 		this.port = port;
+		return this;
+	}
+	
+	public ServerInitializer config(CPServerConfigurator configurator) {
+		CPServerContext.getContext().setConfigurator(configurator);
 		return this;
 	}
 

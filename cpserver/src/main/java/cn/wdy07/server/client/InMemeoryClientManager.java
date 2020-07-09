@@ -9,9 +9,8 @@ import cn.wdy07.model.Message;
 import cn.wdy07.model.Protocol;
 import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.header.ClientType;
-import cn.wdy07.server.client.token.AllPassTokenChecker;
-import cn.wdy07.server.client.token.SimpleToken;
-import cn.wdy07.server.client.token.SimpleTokenConverter;
+import cn.wdy07.server.CPServerContext;
+import cn.wdy07.server.client.token.Token;
 import cn.wdy07.server.client.token.TokenCheckManager;
 import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
@@ -29,8 +28,7 @@ public class InMemeoryClientManager implements ClientManager {
 	private ConcurrentHashMap<String, ArrayList<Client>> clientsMap = new ConcurrentHashMap<String, ArrayList<Client>>();
 	private int maxLoginClientCount = 5;
 
-	private TokenCheckManager<SimpleToken> checkManager = new TokenCheckManager<SimpleToken>(new AllPassTokenChecker(),
-			new SimpleTokenConverter());
+	private TokenCheckManager<? extends Token> checkManager = CPServerContext.getContext().getConfigurator().getTokenCheckManager();
 
 	private InMemeoryClientManager() {
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.wdy07.model.Message;
+import cn.wdy07.server.CPServerContext;
 import cn.wdy07.server.client.Client;
 import cn.wdy07.server.client.ClientManager;
 import cn.wdy07.server.client.InMemeoryClientManager;
@@ -15,9 +16,9 @@ import cn.wdy07.server.handler.offline.OfflineMessageManager;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public class SimpleGroupMessageTransferer implements MessageTransferer {
-	private OfflineMessageManager offlineMessageManager = InMemoryOfflineMessageManager.getInstance();
-	private ClientManager clientManager = InMemeoryClientManager.getInstance();
-	private GroupManager groupManager = SimpleLocalGroupManager.getInstance();
+	private OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator().getOfflineMessageManager();
+	private ClientManager clientManager = CPServerContext.getContext().getConfigurator().getClientManager();
+	private GroupManager groupManager = CPServerContext.getContext().getConfigurator().getGroupManager();
 	
 	@Override
 	public void transfer(MessageWrapper wrapper) {

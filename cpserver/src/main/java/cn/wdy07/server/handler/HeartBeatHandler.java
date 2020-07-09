@@ -1,5 +1,6 @@
 package cn.wdy07.server.handler;
 
+import cn.wdy07.server.CPServerContext;
 import cn.wdy07.server.client.Client;
 import cn.wdy07.server.client.ClientManager;
 import cn.wdy07.server.client.InMemeoryClientManager;
@@ -11,7 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
  *
  */
 public class HeartBeatHandler implements MessageHandler {
-	ClientManager manager = InMemeoryClientManager.getInstance();
+	ClientManager manager = CPServerContext.getContext().getConfigurator().getClientManager();
 	
 	@Override
 	public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {

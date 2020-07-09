@@ -1,8 +1,8 @@
 package cn.wdy07.server.protocol;
 
 import cn.wdy07.model.Protocol;
+import cn.wdy07.server.CPServerContext;
 import cn.wdy07.server.client.ClientManager;
-import cn.wdy07.server.client.InMemeoryClientManager;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,7 +10,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 public class ProtocolEncoder extends MessageToByteEncoder<MessageWrapper> {
 	Protocol defaultProtocol = Protocol.privatee;
-	ClientManager manager = InMemeoryClientManager.getInstance();
+	ClientManager manager = CPServerContext.getContext().getConfigurator().getClientManager();
 
 	public ProtocolEncoder() {
 		super();
