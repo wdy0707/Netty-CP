@@ -9,7 +9,7 @@ import cn.wdy07.model.header.MessageSubType;
 import cn.wdy07.model.header.MessageType;
 
 public class MessageBuilder {
-	Message message;
+	private Message message;
 	
 	public static MessageBuilder create() {
 		return new MessageBuilder();

@@ -8,3 +8,11 @@
 out
 gen
 .gradle
+.classpath
+bin/
+.project
+.settings
+.gitignore
+client/
+common/
+server/

@@ -1,10 +1,9 @@
 package cn.wdy07.server.protocol;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import cn.wdy07.model.Protocol;
@@ -16,26 +15,18 @@ import cn.wdy07.server.exception.UnsupportedProtocolException;
  *
  */
 public class SupportedProtocol {
-	private static SupportedProtocol supportedProtocol = new SupportedProtocol();
-	
-	private List<ProtocolHandlerNode> supportedProtocols = new ArrayList<ProtocolHandlerNode>();
+	private static final Protocol defaultProtocol = Protocol.privatee;
+	private HashMap<Protocol, ProtocolCodec> codecs = new HashMap<Protocol, ProtocolCodec>();
+	private Set<ProtocolCodec> copy;
 	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-	
-	private SupportedProtocol() {
-		
-	}
-	
-	public static SupportedProtocol getInstance() {
-		return supportedProtocol;
-	}
+	private boolean registeredNewProtocol = false;
 	
 	public boolean support(String protocol) {
+		Protocol p = Protocol.valueOf(Protocol.class, protocol);
+		
 		try {
 			lock.readLock().lock();
-			for (ProtocolHandlerNode node : supportedProtocols)
-				if (node.getProtocol().name().equals(protocol))
-					return true;
-			return false;
+			return codecs.containsKey(p);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -44,10 +35,7 @@ public class SupportedProtocol {
 	public boolean support(Protocol protocol) {
 		try {
 			lock.readLock().lock();
-			for (ProtocolHandlerNode node : supportedProtocols)
-				if (node.getProtocol() == protocol)
-					return true;
-			return false;
+			return codecs.containsKey(protocol);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -58,11 +46,19 @@ public class SupportedProtocol {
 		Protocol protocol = null;
 		try {
 			lock.readLock().lock();
+			if (codecs.size() == 0)
+				throw new IllegalArgumentException("no support protocol");
+			
 			for (Protocol p : protocols) {
-				if (support(p)) {
-					if (protocol == null || protocol.ordinal() > p.ordinal())
+				if (support(p))
+					if (protocol == null || p.ordinal() < protocol.ordinal())
 						protocol = p;
-				}
+				
+			if (protocol == null && support(defaultProtocol))
+				protocol = defaultProtocol;
+			
+			if (protocol == null)
+				protocol = codecs.keySet().toArray(Protocol.values())[0];
 			}
 		} finally {
 			lock.readLock().unlock();
@@ -76,7 +72,8 @@ public class SupportedProtocol {
 			if (support(protocol))
 				throw new IllegalArgumentException("protocol " + protocol.name() + "is registered");
 			
-			supportedProtocols.add(new ProtocolHandlerNode(protocol, codec));
+			codecs.put(protocol, codec);
+			registeredNewProtocol = true;
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -88,7 +85,8 @@ public class SupportedProtocol {
 			if (support(node.getProtocol()))
 				throw new IllegalArgumentException("protocol " + node.getProtocol().name() + "is registered");
 			
-			supportedProtocols.add(node);
+			codecs.put(node.getProtocol(), node.getCodec());
+			registeredNewProtocol = true;
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -97,39 +95,36 @@ public class SupportedProtocol {
 	public ProtocolCodec getCodec(Protocol protocol) {
 		try {
 			lock.readLock().lock();
-			for (ProtocolHandlerNode node : supportedProtocols)
-				if (node.getProtocol() == protocol)
-					return node.getCodec();
-			
-			throw new UnsupportedProtocolException("protocol " + protocol.name() + " is not support");
+			if (!support(protocol))
+				throw new UnsupportedProtocolException("protocol " + protocol.name() + " is not support");
+			return codecs.get(protocol);
 		} finally {
 			lock.readLock().unlock();
 		}
 	}
 	
 	public ProtocolCodec getCodec(String protocol) {
+		Protocol p = Protocol.valueOf(Protocol.class, protocol);
 		try {
 			lock.readLock().lock();
-			for (ProtocolHandlerNode node : supportedProtocols)
-				if (node.getProtocol().name().equals(protocol))
-					return node.getCodec();
-			
-			throw new UnsupportedProtocolException("protocol " + protocol + " is not support");
+			if (!support(protocol))
+				throw new UnsupportedProtocolException("protocol " + protocol + " is not support");
+			return codecs.get(p);
 		} finally {
 			lock.readLock().unlock();
 		}
 	}
 	
-	/*
-	 * 这样写可以运行时动态注册新的协议
-	 */
-	public List<ProtocolHandlerNode> getAllCodec() {
-		try {
-			lock.readLock().lock();
-			return new ArrayList<ProtocolHandlerNode>(supportedProtocols);
-		} finally {
-			lock.readLock().unlock();
+	public Set<ProtocolCodec> getAllCodec() {
+		if (copy == null || registeredNewProtocol) {
+			try {
+				lock.readLock().lock();
+				copy = new HashSet<ProtocolCodec>(codecs.values());
+			} finally {
+				lock.readLock().unlock();
+			}
+
 		}
+		return copy;
 	}
-	
 }

@@ -8,21 +8,21 @@ import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.content.LoginResponseMessageContent;
 import cn.wdy07.model.header.ConversationType;
 import cn.wdy07.server.CPServerContext;
-import cn.wdy07.server.client.ClientManager;
-import cn.wdy07.server.client.InMemeoryClientManager;
 import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
-import cn.wdy07.server.handler.offline.InMemoryOfflineMessageManager;
 import cn.wdy07.server.handler.offline.OfflineMessageManager;
 import cn.wdy07.server.protocol.SupportedProtocol;
 import cn.wdy07.server.protocol.message.MessageBuilder;
 import cn.wdy07.server.protocol.message.MessageWrapper;
+import cn.wdy07.server.user.UserManager;
 import io.netty.channel.ChannelHandlerContext;
 
 public class LoginLogoutHandler implements MessageHandler {
-	ClientManager clientManager = CPServerContext.getContext().getConfigurator().getClientManager();
-	OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator().getOfflineMessageManager();
+	OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator()
+			.getOfflineMessageManager();
+	UserManager userManager = CPServerContext.getContext().getConfigurator().getUserManager();
+	SupportedProtocol supportedProtocol = CPServerContext.getContext().getConfigurator().getSupportedProtocol();
 
 	@Override
 	public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {
@@ -32,7 +32,7 @@ public class LoginLogoutHandler implements MessageHandler {
 		if (message.getHeader().getConversationType() == ConversationType.LOGIN) {
 			Message retMessage = null;
 			try {
-				clientManager.login(wrapper, ctx.channel());
+				userManager.login(wrapper, ctx.channel());
 				logined = true;
 
 				// TODO: 构建OK报文
@@ -53,7 +53,7 @@ public class LoginLogoutHandler implements MessageHandler {
 
 			MessageWrapper out = new MessageWrapper(retMessage);
 			out.addAllDescription(wrapper);
-			Protocol protocol = SupportedProtocol.getInstance().getOneSupportedProtocol(
+			Protocol protocol = supportedProtocol.getOneSupportedProtocol(
 					((LoginRequestMessageContent) message.getContent()).getSupportedProtocols());
 			out.addDescription(MessageWrapper.receiverKey, message.getHeader().getUserId());
 			out.addDescription(MessageWrapper.protocolKey, protocol);
@@ -64,8 +64,7 @@ public class LoginLogoutHandler implements MessageHandler {
 				// TODO: 获取历史消息
 
 				// 离线消息发送
-				List<MessageWrapper> offlineMessages = offlineMessageManager
-						.getOfflineMessage(userId);
+				List<MessageWrapper> offlineMessages = offlineMessageManager.getOfflineMessage(userId);
 				for (MessageWrapper wrapper2 : offlineMessages) {
 					wrapper2.addDescription(MessageWrapper.protocolKey, protocol);
 					ctx.channel().writeAndFlush(wrapper2);
@@ -73,7 +72,7 @@ public class LoginLogoutHandler implements MessageHandler {
 			}
 
 		} else { // logout
-			clientManager.logout(wrapper, ctx.channel());
+			userManager.logout(wrapper, ctx.channel());
 		}
 
 	}

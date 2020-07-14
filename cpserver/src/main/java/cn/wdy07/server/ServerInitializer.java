@@ -23,11 +23,19 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ServerInitializer {
-	List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
+	private List<MessageHandlerNode> handlers = new ArrayList<MessageHandlerNode>();
 	private int port;
+	
+	public ServerInitializer() {
+		
+	}
+	
+	public ServerInitializer(CPServerConfigurator configurator) {
+		CPServerContext.getContext().setConfigurator(configurator);
+	}
 
 	public ServerInitializer protocol(Protocol protocol, ProtocolCodec codec) {
-		SupportedProtocol.getInstance().register(protocol, codec);
+		CPServerContext.getContext().getConfigurator().getSupportedProtocol().register(protocol, codec);
 		return this;
 	}
 
@@ -43,11 +51,6 @@ public class ServerInitializer {
 
 	public ServerInitializer bind(int port) {
 		this.port = port;
-		return this;
-	}
-	
-	public ServerInitializer config(CPServerConfigurator configurator) {
-		CPServerContext.getContext().setConfigurator(configurator);
 		return this;
 	}
 

@@ -6,5 +6,5 @@ package cn.wdy07.model;
  *
  */
 public enum Protocol {
-	privatee;
+	privatee, http, https, websocket;
 }

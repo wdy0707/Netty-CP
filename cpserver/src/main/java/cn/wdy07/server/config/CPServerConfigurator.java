@@ -1,17 +1,21 @@
 package cn.wdy07.server.config;
 
-import cn.wdy07.server.client.ClientManager;
-import cn.wdy07.server.client.token.Token;
-import cn.wdy07.server.client.token.TokenCheckManager;
 import cn.wdy07.server.handler.group.GroupManager;
 import cn.wdy07.server.handler.offline.OfflineMessageManager;
 import cn.wdy07.server.handler.persist.MessagePersistence;
 import cn.wdy07.server.handler.transfer.MessageTransferer;
+import cn.wdy07.server.protocol.SupportedProtocol;
+import cn.wdy07.server.user.OnlineUserRepository;
+import cn.wdy07.server.user.UserManager;
+import cn.wdy07.server.user.token.Token;
+import cn.wdy07.server.user.token.TokenCheckManager;
 
 public interface CPServerConfigurator {
 	TokenCheckManager<? extends Token> getTokenCheckManager();
 	
-	ClientManager getClientManager();
+	UserManager getUserManager();
+	
+	OnlineUserRepository getOnlineUserRepository();
 	
 	GroupManager getGroupManager();
 	
@@ -22,4 +26,6 @@ public interface CPServerConfigurator {
 	MessageTransferer getPrivateMessageTransferer();
 	
 	MessageTransferer getGroupMessageTransferer();
+	
+	SupportedProtocol getSupportedProtocol();
 }
