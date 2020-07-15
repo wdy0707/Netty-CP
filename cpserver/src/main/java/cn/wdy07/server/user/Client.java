@@ -12,6 +12,8 @@ public class Client {
 	private ClientType clientType;
 	private List<Protocol> protocols;
 
+	private int heartbeat;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -42,6 +44,14 @@ public class Client {
 
 	public void setProtocols(List<Protocol> protocols) {
 		this.protocols = protocols;
+	}
+	
+	public int addHeartbeatAndGet() {
+		return ++heartbeat;
+	}
+	
+	public void setHeartbeatZero() {
+		heartbeat = 0;
 	}
 
 	@Override

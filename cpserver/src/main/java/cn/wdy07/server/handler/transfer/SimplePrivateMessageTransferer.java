@@ -26,8 +26,7 @@ public class SimplePrivateMessageTransferer implements MessageTransferer {
 
 		MessageWrapper outWrapper;
 		for (Client client : from.getOnlineClient()) {
-			outWrapper = new MessageWrapper(message);
-			outWrapper.addAllDescription(wrapper);
+			outWrapper = new MessageWrapper(wrapper);
 			outWrapper.addDescription(MessageWrapper.receiverKey, userId);
 			outWrapper.addDescription(MessageWrapper.protocolKey,
 					supportedProtocol.getOneSupportedProtocol(client.getProtocols()));

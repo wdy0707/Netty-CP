@@ -21,7 +21,7 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class CPServer {
 	public static void main(String[] args) {
-		new ServerInitializer(new DefaultCPServerConfigurator())
+		new ServerInitializer(new MyConfigurator())
 				
 				// 支持的协议
 				.protocol(Protocol.privatee, new PrivateProtocolHandler())

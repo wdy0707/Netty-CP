@@ -22,37 +22,81 @@ import cn.wdy07.server.user.token.TokenCheckManager;
 
 public class DefaultCPServerConfigurator implements CPServerConfigurator {
 
-	private UserManager userManager;
-	private OnlineUserRepository onlineUserRepository;
-	private SupportedProtocol supportedProtocol;
+	protected UserManager userManager;
+	protected OnlineUserRepository onlineUserRepository;
+	protected SupportedProtocol supportedProtocol;
+	protected GroupManager groupManager;
+	protected OfflineMessageManager offlineMessageManager;
+	protected TokenCheckManager<? extends Token> checkManager;
+	protected MessagePersistence messagePersistence;
+	protected MessageTransferer groupMessageTransferer;
+	protected MessageTransferer privateMessageTransferer;
+	
 	@Override
 	public TokenCheckManager<? extends Token> getTokenCheckManager() {
-		return new TokenCheckManager<SimpleToken>(new AllPassTokenChecker(), new SimpleTokenConverter());
+		if (checkManager == null) {
+			synchronized (this) {
+				if (checkManager == null)
+					checkManager = new TokenCheckManager<SimpleToken>(new AllPassTokenChecker(),
+							new SimpleTokenConverter());
+			}
+		}
+		return checkManager;
 	}
 
 	@Override
 	public GroupManager getGroupManager() {
-		return SimpleLocalGroupManager.getInstance();
+		if (groupManager == null) {
+			synchronized (this) {
+				if (groupManager == null)
+					groupManager = new SimpleLocalGroupManager();
+			}
+		}
+		return groupManager;
 	}
 
 	@Override
 	public OfflineMessageManager getOfflineMessageManager() {
-		return InMemoryOfflineMessageManager.getInstance();
+		if (offlineMessageManager == null) {
+			synchronized (this) {
+				if (offlineMessageManager == null)
+					offlineMessageManager = new InMemoryOfflineMessageManager();
+			}
+		}
+		return offlineMessageManager;
 	}
 
 	@Override
 	public MessagePersistence getMessagePersistence() {
-		return new PrintConsoleMessagePersistence();
+		if (messagePersistence == null) {
+			synchronized (this) {
+				if (messagePersistence == null)
+					messagePersistence = new PrintConsoleMessagePersistence();
+			}
+		}
+		return messagePersistence;
 	}
 
 	@Override
 	public MessageTransferer getPrivateMessageTransferer() {
-		return new SimplePrivateMessageTransferer();
+		if (groupMessageTransferer == null) {
+			synchronized (this) {
+				if (groupMessageTransferer == null)
+					groupMessageTransferer = new SimplePrivateMessageTransferer();
+			}
+		}
+		return groupMessageTransferer;
 	}
 
 	@Override
 	public MessageTransferer getGroupMessageTransferer() {
-		return new SimpleGroupMessageTransferer();
+		if (groupMessageTransferer == null) {
+			synchronized (this) {
+				if (groupMessageTransferer == null)
+					groupMessageTransferer = new SimpleGroupMessageTransferer();
+			}
+		}
+		return groupMessageTransferer;
 	}
 
 	@Override

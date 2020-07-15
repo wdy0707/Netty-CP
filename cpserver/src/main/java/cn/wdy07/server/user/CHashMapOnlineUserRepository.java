@@ -53,6 +53,8 @@ public class CHashMapOnlineUserRepository implements OnlineUserRepository {
 					if (c.getClientType().equals(client.getClientType()))
 						throw new RepeatLoginException("同一类客户端不能登陆多个");
 				}
+				
+				onlineClients.add(client);
 			} catch (Exception e) {
 				if (user.getOnlineClient().size() == 0)
 					clientsMap.remove(userId);
@@ -100,6 +102,11 @@ public class CHashMapOnlineUserRepository implements OnlineUserRepository {
 					return c;
 		}
 		return null;
+	}
+
+	@Override
+	public void deleteUser(String userId) {
+		clientsMap.remove(userId);
 	}
 
 }

@@ -9,24 +9,19 @@ import cn.wdy07.server.protocol.message.MessageWrapper;
 
 public class InMemoryOfflineMessageManager implements OfflineMessageManager {
 	private ConcurrentHashMap<String, List<MessageWrapper>> offlineMessage = new ConcurrentHashMap<String, List<MessageWrapper>>();
-	
-	private static InMemoryOfflineMessageManager manager = new InMemoryOfflineMessageManager();
-	
+
 	private static final ArrayList<MessageWrapper> EMPTY_LIST = new ArrayList<MessageWrapper>();
-	private InMemoryOfflineMessageManager() {
-		
+
+	public InMemoryOfflineMessageManager() {
+
 	}
-	
-	public static InMemoryOfflineMessageManager getInstance() {
-		return manager;
-	}
-	
+
 	@Override
 	public void putOfflineMessage(String userId, MessageWrapper wrapper) {
 		List<MessageWrapper> list = offlineMessage.putIfAbsent(userId, new ArrayList<MessageWrapper>());
 		if (list == null)
 			list = offlineMessage.get(userId);
-		
+
 		synchronized (list) {
 			list.add(wrapper);
 		}

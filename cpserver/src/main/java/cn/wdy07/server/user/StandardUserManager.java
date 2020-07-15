@@ -92,4 +92,9 @@ public class StandardUserManager implements UserManager {
 		onlineUserRepository.deleteClient(userId, channel);
 	}
 
+	@Override
+	public void deleteUser(String userId) {
+		onlineUserRepository.deleteUser(userId);
+	}
+
 }

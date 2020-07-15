@@ -18,16 +18,26 @@ public class MessageWrapper {
 
 	private HashMap<String, Object> description;
 
+	public MessageWrapper() {
+		
+	}
+	
 	public MessageWrapper(Message message) {
 		super();
 		this.message = message;
 		this.description = new HashMap<String, Object>();
 	}
+	
+	public MessageWrapper(MessageWrapper wrapper) {
+		super();
+		this.message = wrapper.message;
+		this.description = new HashMap<String, Object>(wrapper.description);
+	}
 
 	public Message getMessage() {
 		return message;
 	}
-
+	
 	public void setMessage(Message message) {
 		this.message = message;
 	}

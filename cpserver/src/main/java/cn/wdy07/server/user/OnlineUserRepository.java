@@ -12,4 +12,5 @@ public interface OnlineUserRepository {
 	void addClient(Client client);
 	
 	void deleteClient(String userId, Channel channel);
+	void deleteUser(String userId);
 }
