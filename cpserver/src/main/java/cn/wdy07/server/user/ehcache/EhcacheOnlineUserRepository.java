@@ -1,4 +1,4 @@
-package cn.wdy07.server.user;
+package cn.wdy07.server.user.ehcache;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,6 +8,9 @@ import java.util.Set;
 
 import cn.wdy07.server.exception.ExceedMaxLoginClientException;
 import cn.wdy07.server.exception.RepeatLoginException;
+import cn.wdy07.server.user.Client;
+import cn.wdy07.server.user.OnlineUserRepository;
+import cn.wdy07.server.user.User;
 import io.netty.channel.Channel;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;

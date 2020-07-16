@@ -7,4 +7,10 @@ dependencies {
     // https://mvnrepository.com/artifact/net.sf.ehcache/ehcache
 compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
     
+    // https://mvnrepository.com/artifact/redis.clients/jedis
+compile group: 'redis.clients', name: 'jedis', version: '3.2.0'
+    
+    // https://mvnrepository.com/artifact/com.alibaba/fastjson
+compile group: 'com.alibaba', name: 'fastjson', version: '1.2.70'
+    
 }
