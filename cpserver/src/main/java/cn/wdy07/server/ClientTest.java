@@ -33,6 +33,18 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+
+/**
+ * 获取命令行输入利用反射调用SendMessageUtil里面的方法
+ * 语法，空格分隔，转义为"
+ * 方法名 参数1 参数2 参数3
+ * 方法名或参数中间如有空格或"，使用"将方法名或参数包裹起来，使用""转义"
+ * 例如: pchat user1 user2 "I""am a boy."
+ * 第三个参数为I"am a boy.
+ * 
+ * @author jinzhiqiang
+ *
+ */
 public class ClientTest {
 
 	public static void main(String[] args) {
@@ -124,16 +136,18 @@ public class ClientTest {
 			new Thread(client).start();
 			ChannelFuture future = null;
 			Scanner in = new Scanner(System.in);
+			CommandLineUtil util = null;
 			while (true) {
 				try {
 					// 获取future，线程有等待处理时间
 					if (null == future) {
 						future = client.getFuture();
+						if (future != null)
+							util = new CommandLineUtil(new SendMessageUtil(future.channel()));
 						Thread.sleep(500);
 						continue;
 					}
-
-					sendMessage(future.channel(), in.nextLine());
+					util.invoke(in.nextLine());
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -152,67 +166,8 @@ public class ClientTest {
 		// heartbeat
 		// private
 		// group
-		public static void sendMessage(Channel ch, String line) {
-			Message message = constructMessage(line);
-			if (message != null) {
-				System.out.println(message);
-				ch.writeAndFlush(message);
-			}
-		}
+
 		
-		private static Message constructMessage(String line) {
-			String[] split = line.split("\\|");
-			
-			if (line.startsWith("login")) {
-				LoginRequestMessageContent loginMessageContent = new LoginRequestMessageContent();
-				loginMessageContent.setSupportedProtocols(new ArrayList<Protocol>(Arrays.asList(Protocol.privatee)));
-				loginMessageContent.setClientType(ClientType.values()[Integer.valueOf(split[2])]);
-				// login|userId|clientType
-				Message message = MessageBuilder.create()
-						.convesationType(ConversationType.LOGIN)
-						.userId(split[1])
-						.content(loginMessageContent)
-						.build();
-				message.setContent(loginMessageContent);
-				return message;
-			} else if (line.startsWith("logout")) {
-				// logout|userId
-				return MessageBuilder.create()
-						.convesationType(ConversationType.LOGOUT)
-						.userId(split[1])
-						.build();
-			} else if (line.startsWith("heartbeat")) {
-				// heartbeat|userId
-				return MessageBuilder.create()
-						.convesationType(ConversationType.HEARTBEAT)
-						.userId(split[1])
-						.build();
-			} else if (line.startsWith("private")) {
-				TextMessageContent content = new TextMessageContent();
-				content.setText(split[3]);
-				
-				// private|userId|targetId|content
-				return MessageBuilder.create()
-						.convesationType(ConversationType.PRIVATE)
-						.userId(split[1])
-						.targetId(split[2])
-						.content(content)
-						.build();
-			} else if (line.startsWith("group")) {
-				TextMessageContent content = new TextMessageContent();
-				content.setText(split[3]);
-				
-				// group|userId|targetId|content
-				return MessageBuilder.create()
-						.convesationType(ConversationType.GROUP)
-						.userId(split[1])
-						.targetId(split[2])
-						.content(content)
-						.build();
-			}
-			
-			return null;
-		}
 
 	}
 }
