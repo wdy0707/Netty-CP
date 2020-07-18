@@ -48,6 +48,7 @@ public class RedisOfflineMessageManager implements OfflineMessageManager {
 			throw new IllegalStateException("user hasnot logined.");
 		
 		List<String> strings = localJedis.get().lrange(userId + suffix, 0, -1);
+		localJedis.get().del(userId + suffix);
 		List<MessageWrapper> wrappers = new ArrayList<MessageWrapper>(strings.size());
 		for (int i = 0; i < strings.size(); i++) {
 			wrappers.add(JSON.parseObject(strings.get(i), MessageWrapper.class));
