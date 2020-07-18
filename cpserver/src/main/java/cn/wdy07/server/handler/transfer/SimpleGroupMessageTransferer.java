@@ -16,7 +16,7 @@ import cn.wdy07.server.user.UserManager;
 
 public class SimpleGroupMessageTransferer implements MessageTransferer {
 	private OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator()
-			.getOfflineMessageManager();
+			.getGroupOfflineMessageManager();
 	private GroupManager groupManager = CPServerContext.getContext().getConfigurator().getGroupManager();
 	private UserManager userManager = CPServerContext.getContext().getConfigurator().getUserManager();
 	private SupportedProtocol supportedProtocol = CPServerContext.getContext().getConfigurator().getSupportedProtocol();
@@ -30,17 +30,19 @@ public class SimpleGroupMessageTransferer implements MessageTransferer {
 		// 将消息发送给每一个成员的每一个设备
 		for (Member member : members) {
 			String userId = member.getUserId();
-			MessageWrapper memberWrapper = new MessageWrapper(wrapper);
-			memberWrapper.addDescription(MessageWrapper.receiverKey, userId);
 			User user = userManager.getUser(userId);
 			if (user == null || user.getOnlineClient() == null || user.getOnlineClient().size() == 0) {
-				offlineMessageManager.putOfflineMessage(userId, wrapper);
+				MessageWrapper outWrapper = new MessageWrapper(wrapper);
+				outWrapper.addDescription(MessageWrapper.receiverKey, userId);
+				offlineMessageManager.putOfflineMessage(userId, outWrapper);
 			} else {
 				List<Client> clients = user.getOnlineClient();
 				for (Client client : clients) {
-					memberWrapper.addDescription(MessageWrapper.protocolKey,
+					MessageWrapper outWrapper = new MessageWrapper(wrapper);
+					outWrapper.addDescription(MessageWrapper.receiverKey, userId);
+					outWrapper.addDescription(MessageWrapper.protocolKey,
 							supportedProtocol.getOneSupportedProtocol(client.getProtocols()));
-					client.getChannel().writeAndFlush(memberWrapper);
+					client.getChannel().writeAndFlush(outWrapper);
 				}
 			}
 		}

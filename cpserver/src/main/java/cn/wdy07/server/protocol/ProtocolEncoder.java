@@ -22,7 +22,7 @@ public class ProtocolEncoder extends MessageToByteEncoder<MessageWrapper> {
 	@Override
 	protected void encode(ChannelHandlerContext ctx, MessageWrapper wrapper, ByteBuf out) throws Exception {
 		Protocol protocol = null;
-		protocol = (Protocol) wrapper.getDescription(MessageWrapper.protocolKey);
+		protocol = (Protocol) wrapper.getDescriptionByKey(MessageWrapper.protocolKey);
 		out.writeBytes(supportedProtocol.getCodec(protocol).encode(wrapper.getMessage()));
 	}
 

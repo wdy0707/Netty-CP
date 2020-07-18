@@ -19,8 +19,10 @@ import cn.wdy07.server.user.UserManager;
 import io.netty.channel.ChannelHandlerContext;
 
 public class LoginLogoutHandler implements MessageHandler {
-	OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator()
-			.getOfflineMessageManager();
+	OfflineMessageManager privateOfflineMessageManager = CPServerContext.getContext().getConfigurator()
+			.getPrivateOfflineMessageManager();
+	OfflineMessageManager groupOfflineMessageManager = CPServerContext.getContext().getConfigurator()
+			.getGroupOfflineMessageManager();
 	UserManager userManager = CPServerContext.getContext().getConfigurator().getUserManager();
 	SupportedProtocol supportedProtocol = CPServerContext.getContext().getConfigurator().getSupportedProtocol();
 
@@ -64,8 +66,14 @@ public class LoginLogoutHandler implements MessageHandler {
 				// TODO: 获取历史消息
 
 				// 离线消息发送
-				List<MessageWrapper> offlineMessages = offlineMessageManager.getOfflineMessage(userId);
-				for (MessageWrapper wrapper2 : offlineMessages) {
+				List<MessageWrapper> privateOfflineMessages = privateOfflineMessageManager.getOfflineMessage(userId);
+				for (MessageWrapper wrapper2 : privateOfflineMessages) {
+					wrapper2.addDescription(MessageWrapper.protocolKey, protocol);
+					ctx.channel().writeAndFlush(wrapper2);
+				}
+				
+				List<MessageWrapper> groupOfflineMessages = groupOfflineMessageManager.getOfflineMessage(userId);
+				for (MessageWrapper wrapper2 : groupOfflineMessages) {
 					wrapper2.addDescription(MessageWrapper.protocolKey, protocol);
 					ctx.channel().writeAndFlush(wrapper2);
 				}

@@ -42,11 +42,23 @@ public class MessageWrapper {
 		this.message = message;
 	}
 
+	
+	
+	public HashMap<String, Object> getDescription() {
+		return description;
+	}
+
+	public void setDescription(HashMap<String, Object> description) {
+		this.description = description;
+	}
+
 	public Object addDescription(String key, Object value) {
+		if (description == null)
+			description = new HashMap<String, Object>();
 		return description.put(key, value);
 	}
 
-	public Object getDescription(String key) {
+	public Object getDescriptionByKey(String key) {
 		return description.get(key);
 	}
 
@@ -61,4 +73,11 @@ public class MessageWrapper {
 	public void addAllDescription(MessageWrapper wrapper) {
 		this.description.putAll(wrapper.description);
 	}
+
+	@Override
+	public String toString() {
+		return "MessageWrapper [message=" + message + ", description=" + description + "]";
+	}
+	
+	
 }

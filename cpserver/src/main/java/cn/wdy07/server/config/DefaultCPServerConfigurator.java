@@ -26,7 +26,8 @@ public class DefaultCPServerConfigurator implements CPServerConfigurator {
 	protected OnlineUserRepository onlineUserRepository;
 	protected SupportedProtocol supportedProtocol;
 	protected GroupManager groupManager;
-	protected OfflineMessageManager offlineMessageManager;
+	protected OfflineMessageManager privateOfflineMessageManager;
+	protected OfflineMessageManager groupOfflineMessageManager;
 	protected TokenCheckManager<? extends Token> checkManager;
 	protected MessagePersistence messagePersistence;
 	protected MessageTransferer groupMessageTransferer;
@@ -56,14 +57,26 @@ public class DefaultCPServerConfigurator implements CPServerConfigurator {
 	}
 
 	@Override
-	public OfflineMessageManager getOfflineMessageManager() {
-		if (offlineMessageManager == null) {
+	public OfflineMessageManager getPrivateOfflineMessageManager() {
+		if (privateOfflineMessageManager == null) {
 			synchronized (this) {
-				if (offlineMessageManager == null)
-					offlineMessageManager = new InMemoryOfflineMessageManager();
+				if (privateOfflineMessageManager == null)
+					privateOfflineMessageManager = groupOfflineMessageManager = new InMemoryOfflineMessageManager();
 			}
 		}
-		return offlineMessageManager;
+		return privateOfflineMessageManager;
+	}
+	
+
+	@Override
+	public OfflineMessageManager getGroupOfflineMessageManager() {
+		if (groupOfflineMessageManager == null) {
+			synchronized (this) {
+				if (groupOfflineMessageManager == null)
+					privateOfflineMessageManager = groupOfflineMessageManager = new InMemoryOfflineMessageManager();
+			}
+		}
+		return groupOfflineMessageManager;
 	}
 
 	@Override
@@ -79,13 +92,13 @@ public class DefaultCPServerConfigurator implements CPServerConfigurator {
 
 	@Override
 	public MessageTransferer getPrivateMessageTransferer() {
-		if (groupMessageTransferer == null) {
+		if (privateMessageTransferer == null) {
 			synchronized (this) {
-				if (groupMessageTransferer == null)
-					groupMessageTransferer = new SimplePrivateMessageTransferer();
+				if (privateMessageTransferer == null)
+					privateMessageTransferer = new SimplePrivateMessageTransferer();
 			}
 		}
-		return groupMessageTransferer;
+		return privateMessageTransferer;
 	}
 
 	@Override
@@ -131,5 +144,4 @@ public class DefaultCPServerConfigurator implements CPServerConfigurator {
 		}
 		return supportedProtocol;
 	}
-
 }

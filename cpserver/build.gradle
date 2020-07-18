@@ -12,5 +12,9 @@ compile group: 'redis.clients', name: 'jedis', version: '3.2.0'
     
     // https://mvnrepository.com/artifact/com.alibaba/fastjson
 compile group: 'com.alibaba', name: 'fastjson', version: '1.2.70'
+
+// https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
+compile group: 'com.rabbitmq', name: 'amqp-client', version: '5.9.0'
+
     
 }

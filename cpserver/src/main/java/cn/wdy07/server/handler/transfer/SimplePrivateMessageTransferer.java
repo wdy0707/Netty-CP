@@ -11,10 +11,10 @@ import cn.wdy07.server.user.UserManager;
 
 public class SimplePrivateMessageTransferer implements MessageTransferer {
 	private OfflineMessageManager offlineMessageManager = CPServerContext.getContext().getConfigurator()
-			.getOfflineMessageManager();
+			.getPrivateOfflineMessageManager();
 	private UserManager userManager = CPServerContext.getContext().getConfigurator().getUserManager();
 	private SupportedProtocol supportedProtocol = CPServerContext.getContext().getConfigurator().getSupportedProtocol();
-
+	
 	@Override
 	public void transfer(MessageWrapper wrapper) {
 		Message message = wrapper.getMessage();

@@ -19,7 +19,9 @@ public interface CPServerConfigurator {
 	
 	GroupManager getGroupManager();
 	
-	OfflineMessageManager getOfflineMessageManager();
+	OfflineMessageManager getPrivateOfflineMessageManager();
+	
+	OfflineMessageManager getGroupOfflineMessageManager();
 	
 	MessagePersistence getMessagePersistence();
 	
