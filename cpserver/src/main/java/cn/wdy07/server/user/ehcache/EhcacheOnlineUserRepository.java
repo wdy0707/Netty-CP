@@ -67,7 +67,7 @@ public class EhcacheOnlineUserRepository implements OnlineUserRepository {
 		try {
 			cache.acquireWriteLockOnKey(userId);
 			Element ele = cache.get(userId);
-			if (ele == null) {
+			if (ele == null || ele.getObjectValue() == null) {
 				User user = new User();
 				user.setUserId(userId);
 				List<Client> onlineClient = new ArrayList<Client>();
@@ -77,16 +77,6 @@ public class EhcacheOnlineUserRepository implements OnlineUserRepository {
 			} else {
 				User user = (User) ele.getObjectValue();
 				List<Client> onlineClient = user.getOnlineClient();
-				if (onlineClient.size() >= maxLoginClientCount)
-					throw new ExceedMaxLoginClientException("超过最大登陆客户端个数： " + maxLoginClientCount);
-				for (Client c : onlineClient) {
-					if (c.getChannel().equals(client.getChannel()))
-						throw new RepeatLoginException("该客户端已经登陆");
-
-					if (c.getClientType().equals(client.getClientType()))
-						throw new RepeatLoginException("同一类客户端不能登陆多个");
-				}
-				
 				onlineClient.add(client);
 			}
 		} finally {

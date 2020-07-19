@@ -47,16 +47,6 @@ public class CHashMapOnlineUserRepository implements OnlineUserRepository {
 		synchronized (user) {
 			try {
 				List<Client> onlineClients = user.getOnlineClient();
-				if (onlineClients.size() >= maxLoginClientCount)
-					throw new ExceedMaxLoginClientException("超过最大登陆客户端个数： " + maxLoginClientCount);
-				for (Client c : onlineClients) {
-					if (c.getChannel().equals(client.getChannel()))
-						throw new RepeatLoginException("该客户端已经登陆");
-
-					if (c.getClientType().equals(client.getClientType()))
-						throw new RepeatLoginException("同一类客户端不能登陆多个");
-				}
-				
 				onlineClients.add(client);
 			} catch (Exception e) {
 				if (user.getOnlineClient().size() == 0)

@@ -7,6 +7,7 @@ import cn.wdy07.server.handler.transfer.MessageTransferer;
 import cn.wdy07.server.protocol.SupportedProtocol;
 import cn.wdy07.server.user.OnlineUserRepository;
 import cn.wdy07.server.user.UserManager;
+import cn.wdy07.server.user.login.LoginStrategy;
 import cn.wdy07.server.user.token.Token;
 import cn.wdy07.server.user.token.TokenCheckManager;
 
@@ -30,4 +31,6 @@ public interface CPServerConfigurator {
 	MessageTransferer getGroupMessageTransferer();
 	
 	SupportedProtocol getSupportedProtocol();
+	
+	LoginStrategy getLoginStrategy();
 }
