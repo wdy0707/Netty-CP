@@ -1,9 +1,7 @@
 package cn.wdy07.server;
 
 import cn.wdy07.model.BaseType;
-import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ConversationType;
-import cn.wdy07.server.config.DefaultCPServerConfigurator;
 import cn.wdy07.server.handler.GroupMessageHandler;
 import cn.wdy07.server.handler.HeartBeatHandler;
 import cn.wdy07.server.handler.LoginLogoutHandler;
@@ -11,7 +9,6 @@ import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageStoreHandler;
 import cn.wdy07.server.handler.PrivateMessageHandler;
 import cn.wdy07.server.handler.qualifier.ConversationTypeQualifier;
-import cn.wdy07.server.protocol.PrivateProtocolHandler;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -22,9 +19,6 @@ import io.netty.channel.ChannelHandlerContext;
 public class CPServer {
 	public static void main(String[] args) {
 		new ServerInitializer(new MyConfigurator())
-				
-				// 支持的协议
-				.protocol(Protocol.privatee, new PrivateProtocolHandler())
 
 				// debug 使用，打印每一个收到的报文
 				.messageHandler(new MessageHandler() {
@@ -56,7 +50,9 @@ public class CPServer {
 				.messageHandler(new ConversationTypeQualifier(ConversationType.PRIVATE), new PrivateMessageHandler())
 				.messageHandler(new ConversationTypeQualifier(ConversationType.GROUP), new GroupMessageHandler())
 
-				.bind(8080).start();
+				.bindWebsocket(18888)
+				.bindPrivate(18887)
+				.start();
 	}
 
 }

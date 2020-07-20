@@ -1,19 +1,14 @@
 package cn.wdy07.server.user;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.wdy07.model.Message;
-import cn.wdy07.model.Protocol;
 import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.header.ClientType;
 import cn.wdy07.server.CPServerContext;
-import cn.wdy07.server.exception.ExceedMaxLoginClientException;
-import cn.wdy07.server.exception.RepeatLoginException;
 import cn.wdy07.server.exception.UnAuthorizedTokenException;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import cn.wdy07.server.user.login.LoginStrategy;
@@ -29,7 +24,6 @@ public class StandardUserManager implements UserManager {
 	
 	private LoginStrategy loginStrategy = CPServerContext.getContext().getConfigurator().getLoginStrategy();
 	private static final Logger logger = LoggerFactory.getLogger(StandardUserManager.class);
-	private static final int maxLoginClientCount = 5;
 	@Override
 	public void login(MessageWrapper wrapper, Channel channel) {
 		Message message = wrapper.getMessage();
@@ -55,12 +49,6 @@ public class StandardUserManager implements UserManager {
 		Client client = new Client();
 		client.setUserId(userId);
 		client.setChannel(channel);
-		List<Protocol> protocols = content.getSupportedProtocols();
-		if (protocols.size() <= 0)
-			throw new IllegalArgumentException("客户端未提供支持的协议，至少提供一个支持的协议");
-		ArrayList<Protocol> p = new ArrayList<Protocol>(protocols);
-		p.trimToSize();
-		client.setProtocols(p);
 		ClientType type = content.getClientType();
 		client.setClientType(type);
 		return client;

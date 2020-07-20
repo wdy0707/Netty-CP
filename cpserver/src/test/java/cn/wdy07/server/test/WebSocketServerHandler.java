@@ -43,10 +43,13 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
                 // 收到的请求报文
                 String requestText = twsf.text();
                 System.out.println("server--->收到客户端发的消息:" + requestText);
+//                ctx.fireChannelRead("abcde");
                 // 回写数据
-                ChannelFuture writeAndFlush = ctx.channel().writeAndFlush(new TextWebSocketFrame("你好"));
-                System.out.println("server--->服务端返回的信息:" + writeAndFlush);
+//                ChannelFuture writeAndFlush = ctx.channel().writeAndFlush(new TextWebSocketFrame("你好"));
+//                System.out.println("server--->服务端返回的信息:" + writeAndFlush);
   
+            } else if (wsf instanceof BinaryWebSocketFrame) {
+            	((BinaryWebSocketFrame) wsf).content();
             }
         }
     }

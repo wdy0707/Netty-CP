@@ -8,7 +8,6 @@ import cn.wdy07.server.CPServerContext;
 import cn.wdy07.server.handler.group.GroupManager;
 import cn.wdy07.server.handler.group.Member;
 import cn.wdy07.server.handler.offline.OfflineMessageManager;
-import cn.wdy07.server.protocol.SupportedProtocol;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import cn.wdy07.server.user.Client;
 import cn.wdy07.server.user.User;
@@ -19,7 +18,6 @@ public class SimpleGroupMessageTransferer implements MessageTransferer {
 			.getGroupOfflineMessageManager();
 	private GroupManager groupManager = CPServerContext.getContext().getConfigurator().getGroupManager();
 	private UserManager userManager = CPServerContext.getContext().getConfigurator().getUserManager();
-	private SupportedProtocol supportedProtocol = CPServerContext.getContext().getConfigurator().getSupportedProtocol();
 
 	@Override
 	public void transfer(MessageWrapper wrapper) {
@@ -33,15 +31,11 @@ public class SimpleGroupMessageTransferer implements MessageTransferer {
 			User user = userManager.getUser(userId);
 			if (user == null || user.getOnlineClient() == null || user.getOnlineClient().size() == 0) {
 				MessageWrapper outWrapper = new MessageWrapper(wrapper);
-				outWrapper.addDescription(MessageWrapper.receiverKey, userId);
 				offlineMessageManager.putOfflineMessage(userId, outWrapper);
 			} else {
 				List<Client> clients = user.getOnlineClient();
 				for (Client client : clients) {
 					MessageWrapper outWrapper = new MessageWrapper(wrapper);
-					outWrapper.addDescription(MessageWrapper.receiverKey, userId);
-					outWrapper.addDescription(MessageWrapper.protocolKey,
-							supportedProtocol.getOneSupportedProtocol(client.getProtocols()));
 					client.getChannel().writeAndFlush(outWrapper);
 				}
 			}

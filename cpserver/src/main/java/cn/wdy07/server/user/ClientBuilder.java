@@ -2,7 +2,6 @@ package cn.wdy07.server.user;
 
 import java.util.List;
 
-import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ClientType;
 import io.netty.channel.Channel;
 
@@ -29,11 +28,6 @@ public class ClientBuilder {
 	
 	public ClientBuilder clientType(ClientType clientType) {
 		client.setClientType(clientType);
-		return this;
-	}
-	
-	public ClientBuilder protocols(List<Protocol> protocols) {
-		client.setProtocols(protocols);
 		return this;
 	}
 	

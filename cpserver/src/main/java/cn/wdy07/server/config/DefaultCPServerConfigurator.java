@@ -12,7 +12,6 @@ import cn.wdy07.server.handler.persist.PrintConsoleMessagePersistence;
 import cn.wdy07.server.handler.transfer.MessageTransferer;
 import cn.wdy07.server.handler.transfer.SimpleGroupMessageTransferer;
 import cn.wdy07.server.handler.transfer.SimplePrivateMessageTransferer;
-import cn.wdy07.server.protocol.SupportedProtocol;
 import cn.wdy07.server.user.OnlineUserRepository;
 import cn.wdy07.server.user.StandardUserManager;
 import cn.wdy07.server.user.UserManager;
@@ -29,7 +28,6 @@ public class DefaultCPServerConfigurator implements CPServerConfigurator {
 
 	protected UserManager userManager;
 	protected OnlineUserRepository onlineUserRepository;
-	protected SupportedProtocol supportedProtocol;
 	protected GroupManager groupManager;
 	protected OfflineMessageManager privateOfflineMessageManager;
 	protected OfflineMessageManager groupOfflineMessageManager;
@@ -160,19 +158,6 @@ public class DefaultCPServerConfigurator implements CPServerConfigurator {
 			}
 		}
 		return onlineUserRepository;
-	}
-
-	@Override
-	public SupportedProtocol getSupportedProtocol() {
-		if (supportedProtocol == null) {
-			synchronized (this) {
-				if (supportedProtocol == null) {
-					supportedProtocol = new SupportedProtocol();
-					logger.info("supportedProtocol: {}", SupportedProtocol.class.getSimpleName());
-				}
-			}
-		}
-		return supportedProtocol;
 	}
 
 	@Override

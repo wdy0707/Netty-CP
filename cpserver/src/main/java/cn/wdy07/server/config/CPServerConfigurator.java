@@ -4,7 +4,6 @@ import cn.wdy07.server.handler.group.GroupManager;
 import cn.wdy07.server.handler.offline.OfflineMessageManager;
 import cn.wdy07.server.handler.persist.MessagePersistence;
 import cn.wdy07.server.handler.transfer.MessageTransferer;
-import cn.wdy07.server.protocol.SupportedProtocol;
 import cn.wdy07.server.user.OnlineUserRepository;
 import cn.wdy07.server.user.UserManager;
 import cn.wdy07.server.user.login.LoginStrategy;
@@ -29,8 +28,6 @@ public interface CPServerConfigurator {
 	MessageTransferer getPrivateMessageTransferer();
 	
 	MessageTransferer getGroupMessageTransferer();
-	
-	SupportedProtocol getSupportedProtocol();
 	
 	LoginStrategy getLoginStrategy();
 }

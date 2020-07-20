@@ -1,10 +1,6 @@
 package cn.wdy07.server;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import cn.wdy07.model.Message;
-import cn.wdy07.model.Protocol;
 import cn.wdy07.model.content.LoginRequestMessageContent;
 import cn.wdy07.model.content.TextMessageContent;
 import cn.wdy07.model.header.ClientType;
@@ -21,7 +17,6 @@ public class SendMessageUtil {
 	
 	public void login(String userId, ClientType type) {
 		LoginRequestMessageContent loginMessageContent = new LoginRequestMessageContent();
-		loginMessageContent.setSupportedProtocols(new ArrayList<Protocol>(Arrays.asList(Protocol.privatee)));
 		loginMessageContent.setClientType(type);
 		Message message = MessageBuilder.create()
 				.convesationType(ConversationType.LOGIN)

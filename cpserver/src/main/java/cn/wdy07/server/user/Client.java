@@ -1,8 +1,5 @@
 package cn.wdy07.server.user;
 
-import java.util.List;
-
-import cn.wdy07.model.Protocol;
 import cn.wdy07.model.header.ClientType;
 import io.netty.channel.Channel;
 
@@ -10,10 +7,9 @@ public class Client {
 	private String userId;
 	private Channel channel;
 	private ClientType clientType;
-	private List<Protocol> protocols;
 
 	private int heartbeat;
-	
+
 	public String getUserId() {
 		return userId;
 	}
@@ -38,26 +34,18 @@ public class Client {
 		this.clientType = clientType;
 	}
 
-	public List<Protocol> getProtocols() {
-		return protocols;
-	}
-
-	public void setProtocols(List<Protocol> protocols) {
-		this.protocols = protocols;
-	}
-	
 	public int addHeartbeatAndGet() {
 		return ++heartbeat;
 	}
-	
+
 	public void setHeartbeatZero() {
 		heartbeat = 0;
 	}
 
 	@Override
 	public String toString() {
-		return "Client [userId=" + userId + ", channel=" + channel + ", clientType=" + clientType + ", protocols="
-				+ protocols + "]";
+		return "Client [userId=" + userId + ", channel=" + channel + ", clientType=" + clientType + ", heartbeat="
+				+ heartbeat + "]";
 	}
 
 }

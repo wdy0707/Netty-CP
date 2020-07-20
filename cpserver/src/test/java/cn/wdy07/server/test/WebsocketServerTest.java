@@ -1,8 +1,5 @@
 package cn.wdy07.server.test;
 
-import cn.wdy07.server.handler.MessageInboundHandler;
-import cn.wdy07.server.protocol.ProtocolDecoder;
-import cn.wdy07.server.protocol.ProtocolEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -39,13 +36,14 @@ public class WebsocketServerTest {
 				        pipeline.addLast(new WebSocketServerProtocolHandler("/"));
 				        // 服务端Handler
 				        pipeline.addLast(new WebSocketServerHandler());
+				        pipeline.addLast(new WebSocketServerWriteHandler());
 					}
 
 				});
 
 		try {
-			ChannelFuture future = bootstrap.bind(8081).sync();
-			System.out.println("Server started on port: " + 8081);
+			ChannelFuture future = bootstrap.bind(18081).sync();
+			System.out.println("Server started on port: " + 18081);
 			future.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

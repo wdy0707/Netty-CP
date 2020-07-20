@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.wdy07.server.CPServerContext;
-import cn.wdy07.server.protocol.SupportedProtocol;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import cn.wdy07.server.user.Client;
 import cn.wdy07.server.user.User;
@@ -21,7 +20,6 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class HeartBeatHandler implements MessageHandler {
 	private UserManager manager = CPServerContext.getContext().getConfigurator().getUserManager();
-	private SupportedProtocol supportedProtocol = CPServerContext.getContext().getConfigurator().getSupportedProtocol();
 	private static final int maxHeartbeatCount = 5;
 	private static final Logger logger = LoggerFactory.getLogger(HeartBeatHandler.class);
 
@@ -60,12 +58,12 @@ public class HeartBeatHandler implements MessageHandler {
 
 	@Override
 	public void handle(ChannelHandlerContext ctx, MessageWrapper wrapper) {
+		System.out.println(this);
+		
 		String userId = wrapper.getMessage().getHeader().getUserId();
 		Client client = manager.getClient(userId, ctx.channel());
 
 		wrapper.addDescription(MessageWrapper.receiverKey, userId);
-		wrapper.addDescription(MessageWrapper.protocolKey,
-				supportedProtocol.getOneSupportedProtocol(client.getProtocols()));
 		ctx.channel().writeAndFlush(wrapper);
 	}
 

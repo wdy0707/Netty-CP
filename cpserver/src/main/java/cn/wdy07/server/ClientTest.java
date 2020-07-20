@@ -1,25 +1,14 @@
 package cn.wdy07.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import cn.wdy07.model.Message;
-import cn.wdy07.model.MessageHeader;
-import cn.wdy07.model.Protocol;
-import cn.wdy07.model.content.LoginRequestMessageContent;
-import cn.wdy07.model.content.TextMessageContent;
-import cn.wdy07.model.header.ClientType;
-import cn.wdy07.model.header.ContentSubType;
-import cn.wdy07.model.header.ConversationType;
-import cn.wdy07.model.header.MessageType;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageHandlerNode;
-import cn.wdy07.server.handler.MessageInboundHandler;
 import cn.wdy07.server.handler.qualifier.HandlerAllQualifier;
-import cn.wdy07.server.protocol.PrivateProtocolHandler;
-import cn.wdy07.server.protocol.message.MessageBuilder;
+import cn.wdy07.server.protocol.privatee.PrivateProtocolCodec;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -33,13 +22,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-
 /**
- * 获取命令行输入利用反射调用SendMessageUtil里面的方法
- * 语法，空格分隔，转义为"
- * 方法名 参数1 参数2 参数3
- * 方法名或参数中间如有空格或"，使用"将方法名或参数包裹起来，使用""转义"
- * 例如: pchat user1 user2 "I""am a boy."
+ * 获取命令行输入利用反射调用SendMessageUtil里面的方法 语法，空格分隔，转义为" 方法名 参数1 参数2 参数3
+ * 方法名或参数中间如有空格或"，使用"将方法名或参数包裹起来，使用""转义" 例如: pchat user1 user2 "I""am a boy."
  * 第三个参数为I"am a boy.
  * 
  * @author jinzhiqiang
@@ -86,7 +71,7 @@ public class ClientTest {
 						@Override
 						protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
 								throws Exception {
-							out.add(new PrivateProtocolHandler().decode(in));
+							out.add(new PrivateProtocolCodec().decode(in));
 
 						}
 					});
@@ -94,7 +79,7 @@ public class ClientTest {
 
 						@Override
 						protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-							out.writeBytes(new PrivateProtocolHandler().encode(msg));
+							out.writeBytes(new PrivateProtocolCodec().encode(msg));
 						}
 
 					});
@@ -104,7 +89,7 @@ public class ClientTest {
 						public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 							System.out.println(msg);
 						}
-						
+
 					});
 				}
 
@@ -128,7 +113,7 @@ public class ClientTest {
 
 		@Override
 		public void run() {
-			this.bind(8080).start();
+			this.bind(18887).start();
 		}
 
 		public void func() {
@@ -153,21 +138,9 @@ public class ClientTest {
 					e.printStackTrace();
 					in.close();
 				} finally {
-					
+
 				}
 			}
 		}
-		
-		// group1: user1, user2, user3
-		// group2: user1, user2, user4
-		// group3: user1, user3, user5
-		// login
-		// logout
-		// heartbeat
-		// private
-		// group
-
-		
-
 	}
 }
