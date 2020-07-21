@@ -11,8 +11,11 @@ public class PrivateProtocolDecoder extends ByteToMessageDecoder {
 	private PrivateProtocolCodec codec = new PrivateProtocolCodec();
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		if (codec.containsAtLeastOnePacket(in))
-			out.add(new MessageWrapper(codec.decode(in)));
+		if (codec.containsAtLeastOnePacket(in)) {
+			MessageWrapper wrapper = new MessageWrapper(codec.decode(in));
+			out.add(wrapper);
+		}
+			
 	}
 
 }

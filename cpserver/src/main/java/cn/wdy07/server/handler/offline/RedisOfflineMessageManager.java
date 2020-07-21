@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
 
 import cn.wdy07.server.CPServerContext;
+import cn.wdy07.server.JSONUtil;
 import cn.wdy07.server.protocol.message.MessageWrapper;
 import cn.wdy07.server.user.UserManager;
 import redis.clients.jedis.Jedis;
@@ -39,7 +39,7 @@ public class RedisOfflineMessageManager implements OfflineMessageManager {
 			throw new IllegalStateException("user has logined.");
 		
 		Jedis jedis = localJedis.get();
-		jedis.rpush(userId + suffix, JSON.toJSONString(wrapper));
+		jedis.rpush(userId + suffix, JSONUtil.toJSONString(wrapper));
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class RedisOfflineMessageManager implements OfflineMessageManager {
 		localJedis.get().del(userId + suffix);
 		List<MessageWrapper> wrappers = new ArrayList<MessageWrapper>(strings.size());
 		for (int i = 0; i < strings.size(); i++) {
-			wrappers.add(JSON.parseObject(strings.get(i), MessageWrapper.class));
+			wrappers.add(JSONUtil.parse(strings.get(i), MessageWrapper.class));
 		}
 		return wrappers;
 	}

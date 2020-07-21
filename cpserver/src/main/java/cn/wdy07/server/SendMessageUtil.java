@@ -24,6 +24,7 @@ public class SendMessageUtil {
 				.content(loginMessageContent)
 				.build();
 		message.setContent(loginMessageContent);
+		System.out.println(JSONUtil.toJSONString(message));
 		channel.writeAndFlush(message);
 	}
 	
@@ -32,6 +33,7 @@ public class SendMessageUtil {
 				.convesationType(ConversationType.LOGOUT)
 				.userId(userId)
 				.build();
+		System.out.println(JSONUtil.toJSONString(message));
 		channel.writeAndFlush(message);
 	}
 	
@@ -40,6 +42,7 @@ public class SendMessageUtil {
 				.convesationType(ConversationType.HEARTBEAT)
 				.userId(userId)
 				.build();
+		System.out.println(JSONUtil.toJSONString(message));
 		channel.writeAndFlush(message);
 	}
 	
@@ -52,6 +55,7 @@ public class SendMessageUtil {
 				.targetId(targetId)
 				.content(content)
 				.build();
+		System.out.println(JSONUtil.toJSONString(message));
 		channel.writeAndFlush(message);
 	}
 	
@@ -64,6 +68,7 @@ public class SendMessageUtil {
 				.targetId(targetId)
 				.content(content)
 				.build();
+		System.out.println(JSONUtil.toJSONString(message));
 		channel.writeAndFlush(message);
 	}
 }

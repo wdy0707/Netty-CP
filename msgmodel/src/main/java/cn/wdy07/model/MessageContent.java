@@ -5,6 +5,7 @@ package cn.wdy07.model;
  * @author taylor
  *
  */
+
 public class MessageContent {
 
 }

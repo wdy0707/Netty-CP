@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cn.wdy07.model.Message;
 import cn.wdy07.server.handler.MessageHandler;
 import cn.wdy07.server.handler.MessageHandlerNode;
@@ -31,6 +34,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
  *
  */
 public class ClientTest {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ClientTest.class);
 
 	public static void main(String[] args) {
 		new ServerInitializer().func();
@@ -87,7 +92,7 @@ public class ClientTest {
 
 						@Override
 						public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-							System.out.println(msg);
+							logger.info("receive message: {}", msg);
 						}
 
 					});
